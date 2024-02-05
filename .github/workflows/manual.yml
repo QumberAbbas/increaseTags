@@ -27,10 +27,12 @@ jobs:
     - name: Increase tag version
       id: increase_version
       run: |
-          VERSION=$(echo ${{ env.VERSION }} | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
-          echo "NEW_TAG=$VERSION" >> $GITHUB_ENV
+          VERSION=${{ env.VERSION }}
+          TAG=$(git describe --abbrev=0 --tags --match "$VERSION-alpha*")
+          NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
+          echo "TAG=$NEW_TAG" >> $GITHUB_ENV
           
     - name: Print new tag
       id: create_tag
-      run: echo "${{ steps.latest_tag.outputs.NEW_TAG}}"
+      run: echo "${{ env.TAG}}"
       
