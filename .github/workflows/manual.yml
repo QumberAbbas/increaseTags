@@ -32,7 +32,7 @@ jobs:
             
     - name: Increase App Minor Version if upcoming release branch is already created
       id: increase_app_version
-      if: git show-ref --verify --quiet "refs/remotes/origin/release/${env.VERSION}"
+      if: ${{ success(run:'git show-ref --verify --quiet "refs/remotes/origin/release/${{ env.VERSION }}"')}}
       run: |
         major_version=$(echo "$env.CURRENT_TAG" | cut -d. -f1)
         minor_version=$(echo "$env.CURRENT_TAG" | cut -d. -f2)
