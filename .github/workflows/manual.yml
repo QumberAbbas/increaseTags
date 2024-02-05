@@ -7,7 +7,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "greet"
-  greet:
+  publishApp:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -31,7 +31,12 @@ jobs:
           TAG=$(git describe --abbrev=0 --tags --match "$VERSION-alpha*")
           NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
           echo "TAG=$NEW_TAG" >> $GITHUB_ENV
-          
+    - name: Push Git Tag
+      run: |
+        git config user.name "Scoober GitHub Actions"
+        git config user.email "github-actions@users.noreply.github.com"
+        git tag $TAG
+        git push origin $TAG
     - name: Print new tag
       id: create_tag
       run: echo "${{ env.TAG}}"
