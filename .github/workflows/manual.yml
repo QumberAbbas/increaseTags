@@ -28,7 +28,7 @@ jobs:
       id: increase_version
       run: |
           VERSION=${{ env.VERSION }}
-          TAG=$(git describe --abbrev=0 --tags --match "$VERSION-alpha*")
+          TAG=$(git tag --list "$VERSION-alpha.*" --sort=-version:refname | head -n 1")
           NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
           echo "TAG=$NEW_TAG" >> $GITHUB_ENV
     - name: Push Git Tag
