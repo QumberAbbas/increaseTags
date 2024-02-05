@@ -23,14 +23,8 @@ jobs:
       run: |
           VERSION=$(grep '^version=' version.properties | cut -d'=' -f2)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-    - name: Get latest stage tag version
-      run: |
-          VERSION=${{ env.VERSION }}
-          TAG=$(git tag --list "$VERSION-alpha.*" --sort=-version:refname | head -n 1)
-          echo "CURRENT_TAG=$TAG" >> $GITHUB_ENV
     
-    - name: Check Branch Existence
+    - name: Check Release Branch Existence
       id: check_branch
       run: |
         if git show-ref --verify --quiet "refs/remotes/origin/release/${{ env.VERSION }}"; then
@@ -54,17 +48,18 @@ jobs:
     - name: Increase Tag and Publish
       if: steps.increase_app_version.outcome == 'skipped'
       run: |
-            NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
-            echo "TAG=$NEW_TAG" >> $GITHUB_ENV
+          TAG=$(git tag --list "$VERSION-alpha.*" --sort=-version:refname | head -n 1)
+          NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
     - name: Push Git Tag
       run: |
           git config user.name "Scoober GitHub Actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git tag $TAG
-          git push origin $TAG
+          git tag ${{env.NEW_TAG}}
+          git push origin ${{env.NEW_TAG}}
       
     - name: Print new tag
       id: create_tag
-      run: echo "${{ env.TAG}}"
+      run: echo "${{ env.NEW_TAG}}"
       
