@@ -20,7 +20,7 @@ jobs:
 
     - name: Read App Version
       id: read_version
-      run: echo "VERSION=$(cat version.properties)" >> $GITHUB_ENV
+      run: echo "VERSION=$(sed '2q;d' version.properties)" >> $GITHUB_ENV
 
     - name: Increase tag version
       id: increase_version
