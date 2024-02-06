@@ -32,5 +32,5 @@ jobs:
               ).data[0];
       - name: Pull Request data
         run: |
-          echo '${{ fromJson(steps.get_pr_data.outputs.result).number }}'
-          echo '${{ fromJson(steps.get_pr_data.outputs.result).title }}'
+          echo '${{ fromJson(steps.get_pr_data.outputs.result)}}'
+          echo '${{ fromJson(steps.get_pr_data.outputs.result)}}'
