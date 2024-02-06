@@ -41,7 +41,7 @@ jobs:
         ((minor++))
         NEW_VERSION="${major}.${minor}.${patch}"
         NEW_TAG="${NEW_VERSION}-alpha.1"
-        echo "TAG=$NEW_TAG" >> $GITHUB_ENV
+        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
           
     - name: Increase Tag for Stage If release branch isn't created
       if: steps.increase_app_version.outcome == 'skipped'
