@@ -37,12 +37,10 @@ jobs:
       id: increase_app_version
       if: success() && steps.check_branch.outputs.branch_exists == 'true'
       run: |
-        major_version=$(echo "$env.VERSION" | cut -d. -f1)
-        minor_version=$(echo "$env.VERSION" | cut -d. -f2)
-        patch_version=$(echo "$env.VERSION" | cut -d. -f3)
-        ((minor_version++))
-        UPCOMING_RELEASE_VERSION="${major_version}.${minor_version}.${patch_version}"
-        NEW_TAG="${UPCOMING_RELEASE_VERSION}-alpha.0"
+        IFS='.' read -r major minor patch <<< "$VERSION"
+        ((minor++))
+        NEW_VERSION="${major}.${minor}.${patch}"
+        NEW_TAG="${NEW_VERSION}-alpha.0"
         echo "TAG=$NEW_TAG" >> $GITHUB_ENV
           
     - name: Increase Tag and Publish
