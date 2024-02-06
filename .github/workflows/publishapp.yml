@@ -24,7 +24,7 @@ jobs:
         with:
           github-token: ${{ secrets.PAT }}
           script: |
-            const getPullRequestData = require('./scripts/get_pr_data');
+            const getPullRequestData = require('../scripts/get_pr_data');
             return getPullRequestData(github, context);
 
       - name: Pull Request data
