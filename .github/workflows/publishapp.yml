@@ -2,7 +2,7 @@ name: Build and Publish to Staging
 on:
   push:
     tags:
-      - "[0-9]+.[0-9]+.[0-9]+-alpha+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+-stage+.[0-9]+"
 
 jobs:
   build-and-deploy-to-stage:
@@ -38,30 +38,14 @@ jobs:
             });
             
             if (response.data.length > 0) {
-              const prTitle = response.data[0].title;
-              console.log(prTitle);
-              const ticketNumberRegex = /\[([A-Za-z]+-\d+)\]/; // Regex to extract ticket number like [SCAT-1234]
-              const matches = prTitle.match(ticketNumberRegex);
-              const ticketNumber = matches ? matches[1] : null;
-                if (ticketNumber) {
-                  console.log(`Ticket number: ${ticketNumber}`);
-                  return ticketNumber
-                } else {
-                  console.log('No ticket number found in the title.');
-                }
+                console.log(response.data[0].title);
+                return response.data[0];
             } else {
-              throw new Error('No pull request found for the commit SHA.');
+                throw new Error('No pull request found for the commit SHA.');
             }
             
       - name: Pull Request data
         run: |
-          echo "TICKET_NUMBER=${{steps.get_pr_data.outputs.result}}" >> $GITHUB_ENV
-      
-      - name: Set App Name for Staging Build 
-        id: get_version
-        run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')[${{ env.TICKET_NUMBER }}]" >> $GITHUB_ENV
-      
-      - name: Print Version
-        id: print_version
-        run: echo "${{env.VERSION_NUMBER_CI}}"
-      
+          echo "PR Number: ${{ steps.get_pr_data.outputs.result.number }}"
+          echo "PR Title: ${{ steps.get_pr_data.outputs.result.title }}"
+

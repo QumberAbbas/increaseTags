@@ -51,11 +51,11 @@ jobs:
           
     - name: Increase Tag
       run: |
-          TAG=$(git tag --list "${{ env.TARGETTED_VERSION }}-alpha.*" --sort=-version:refname | head -n 1)
+          TAG=$(git tag --list "${{ env.TARGETTED_VERSION }}-stage.*" --sort=-version:refname | head -n 1)
           if [ -z "$TAG" ]; then
-            NEW_TAG="${{env.TARGETTED_VERSION}}-alpha.1"
+            NEW_TAG="${{env.TARGETTED_VERSION}}-stage.1"
           else
-            NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
+            NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-stage."$5 + 1}')
           fi
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
@@ -66,8 +66,8 @@ jobs:
           git tag ${{env.NEW_TAG}}
           git push origin ${{env.NEW_TAG}}
       
-    - name: Print New tag
-      id: create_tag
+    - name: Print published tag
+      id: print_tag
       run: echo "${{ env.NEW_TAG}}"
       
 
