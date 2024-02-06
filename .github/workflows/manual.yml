@@ -28,9 +28,9 @@ jobs:
       id: check_branch
       run: |
         if git show-ref --verify --quiet "refs/remotes/origin/release/${{ env.VERSION }}"; then
-          echo "branch_exist=true" >> $GITHUB_ENV
+          echo "branch_exists=true" >> $GITHUB_ENV
         else
-          echo "branch_exist=false" >> $GITHUB_ENV
+          echo "branch_exists=false" >> $GITHUB_ENV
         fi        
         
     - name: Increase App Minor Version if upcoming release branch is already created
