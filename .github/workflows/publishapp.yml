@@ -46,6 +46,7 @@ jobs:
             
       - name: Pull Request data
         run: |
+          echo "PR Number: ${{ steps.get_pr_data.outputs.result }}"
           echo "PR Number: ${{ steps.get_pr_data.outputs.result.number }}"
           echo "PR Title: ${{ steps.get_pr_data.outputs.result.title }}"
 
