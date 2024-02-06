@@ -37,9 +37,9 @@ jobs:
       id: increase_app_version
       if: success() && steps.check_branch.outputs.branch_exists == 'true'
       run: |
-        major_version=$(echo "$env.CURRENT_TAG" | cut -d. -f1)
-        minor_version=$(echo "$env.CURRENT_TAG" | cut -d. -f2)
-        patch_version=$(echo "$env.CURRENT_TAG" | cut -d. -f3)
+        major_version=$(echo "$env.VERSION" | cut -d. -f1)
+        minor_version=$(echo "$env.VERSION" | cut -d. -f2)
+        patch_version=$(echo "$env.VERSION" | cut -d. -f3)
         ((minor_version++))
         UPCOMING_RELEASE_VERSION="${major_version}.${minor_version}.${patch_version}"
         NEW_TAG="${UPCOMING_RELEASE_VERSION}-alpha.0"
