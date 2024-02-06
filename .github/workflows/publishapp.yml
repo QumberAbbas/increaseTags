@@ -37,8 +37,9 @@ jobs:
             } else {
                 throw new Error('No pull request found for the commit SHA.');
             }
+          result-encoding: string
             
       - name: Pull Request data
         run: |
-          echo "PR Number: ${{ steps.get_pr_data.outputs.title }}"
+          echo "PR Number: ${{ steps.get_pr_data.outputs.result }}"
 
