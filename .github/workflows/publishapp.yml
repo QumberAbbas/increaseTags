@@ -55,7 +55,7 @@ jobs:
             
       - name: Pull Request data
         run: |
-          echo "TICKET_NUMBER=${{steps.set-result.outputs.result}}" >> $GITHUB_ENV
+          echo "TICKET_NUMBER=${{steps.get_pr_data.outputs.result}}" >> $GITHUB_ENV
       
       - name: Set App Name for Staging Build 
         id: get_version
