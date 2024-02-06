@@ -50,7 +50,6 @@ jobs:
         echo "TARGETTED_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           
     - name: Increase Tag
-      if: steps.increase_app_version.outcome == 'skipped'
       run: |
           TAG=$(git tag --list "${{ env.TARGETTED_VERSION }}-alpha.*" --sort=-version:refname | head -n 1)
           if [ -z "$TAG" ]; then
