@@ -33,12 +33,12 @@ jobs:
             });
             
             if (response.data.length > 0) {
-                console.log(response.data[0].title);
+              return { title: response.data[0].title };    
             } else {
                 throw new Error('No pull request found for the commit SHA.');
             }
             
       - name: Pull Request data
         run: |
-          echo "PR Number: ${{ steps.get_pr_data.outputs.result }}"
+          echo "PR Number: ${{ steps.get_pr_data.outputs.title }}"
 
