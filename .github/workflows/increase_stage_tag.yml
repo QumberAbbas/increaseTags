@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - 'release**'
     
 jobs:
   publish_tag:
@@ -11,43 +12,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
     - name: Checkout
       uses: actions/checkout@v3
       with:
           fetch-depth: 0
           token: ${{ secrets.PAT }}
         
-    - name: Fetch Upcoming Release Version
-      id: fetch_upcoming_release_version
+    # Get version of app for upcoming release    
+    - name: Get Upcoming Release Version
+      id: get_upcoming_release_version
       run: |
-          VERSION=$(grep '^version=' version.properties | cut -d'=' -f2)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          TARGETTED_VERSION=$(grep '^version=' version.properties | cut -d'=' -f2)
+          echo "TARGETTED_VERSION=$TARGETTED_VERSION" >> $GITHUB_ENV
     
+    # If push is to develop branch and release branch is already created then we have to increment app minor version
+    # This can happen in case Release Commander don't publish next version of app in version.properties file after creating new branch.
+    # In case push is to release branch then we don't need this
     - name: Check If Release Branch Is Already Created
+      if: github.ref == 'refs/heads/develop'
       #If release branch is created and we don't have version updated in version.properties then we will increment tag as this commit is targetting dev branch not release.
       id: check_release_branch_exists
       run: |
-        if git show-ref --verify --quiet "refs/remotes/origin/release/${{ env.VERSION }}"; then
+        if git show-ref --verify --quiet "refs/remotes/origin/release/${{ env.TARGETTED_VERSION }}"; then
           echo "release_branch_exists=true" >> $GITHUB_OUTPUT
         else
           echo "release_branch_exists=false" >> $GITHUB_OUTPUT
         fi        
         
-    - name: Increase App Minor Version If release branch is already created and Create Tag
+    - name: Increase App Minor Version If Release Branch Exists
       id: increase_app_version
-      if: success() && steps.check_release_branch_exists.outputs.release_branch_exists == 'true'
+      if: github.ref == 'refs/heads/develop' && success() && steps.check_release_branch_exists.outputs.release_branch_exists == 'true'
       run: |
         IFS='.' read -r major minor patch <<< "$VERSION"
         ((minor++))
         NEW_VERSION="${major}.${minor}.${patch}"
-        NEW_TAG="${NEW_VERSION}-alpha.1"
-        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+        echo "TARGETTED_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           
     - name: Increase Tag for Stage If release branch isn't created
       if: steps.increase_app_version.outcome == 'skipped'
       run: |
-          TAG=$(git tag --list "$VERSION-alpha.*" --sort=-version:refname | head -n 1)
-          NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
+          TAG=$(git tag --list "${{ env.TARGETTED_VERSION }}-alpha.*" --sort=-version:refname | head -n 1)
+          if [ -z "$TAG" ]; then
+            NEW_TAG="${env.TARGETTED_VERSION}-alpha.1"
+          else
+            NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
+          fi
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
     - name: Push Git Tag
