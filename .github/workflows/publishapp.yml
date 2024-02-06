@@ -55,5 +55,9 @@ jobs:
             
       - name: Pull Request data
         run: |
-          echo "PR Number: ${{ env.TICKET_NUMBER }}
-
+          echo "PR Number: ${{ env.TICKET_NUMBER }}"
+      
+      - name: Set App Name for Staging Build 
+        id: get_version
+        run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')-[${{ env.TICKET_NUMBER }}]" >> $GITHUB_ENV
+      
