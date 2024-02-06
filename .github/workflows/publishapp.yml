@@ -29,10 +29,10 @@ jobs:
         id: get_pr_data
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PAT }}
           script: |
             const response = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-            commit_sha: github.sha,
+            commit_sha: context.sha,
             owner: context.repo.owner,
             repo: context.repo.repo
             });
