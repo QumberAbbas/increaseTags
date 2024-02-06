@@ -25,7 +25,7 @@ jobs:
           script: |
               return (
                 await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  commit_sha: ${{ github.event.head_commit.message }},
+                  commit_sha: context.sha,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                 })
