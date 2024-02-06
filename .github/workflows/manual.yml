@@ -1,49 +1,48 @@
-name: Manual workflow
+name: Publish Tag for Development Branch
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - develop
     
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
-  publishApp:
-    # The type of runner that the job will run on
+  publish_tag:
+
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - name: Checkout
       uses: actions/checkout@v3
       with:
           fetch-depth: 0
         
-    - name: Fetch Next Release Version
+    - name: Fetch Upcoming Release Version
       id: fetch_upcoming_release_version
       run: |
           VERSION=$(grep '^version=' version.properties | cut -d'=' -f2)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
     
-    - name: Check Release Branch Existence
-      id: check_branch
+    - name: Check If Release Branch Is Already Created
+      #If release branch is created and we don't have version updated in version.properties then we will increment tag as this commit is targetting dev branch not release.
+      id: check_release_branch_exists
       run: |
         if git show-ref --verify --quiet "refs/remotes/origin/release/${{ env.VERSION }}"; then
-          echo "branch_exists=true" >> $GITHUB_OUTPUT
+          echo "release_branch_exists=true" >> $GITHUB_OUTPUT
         else
-          echo "branch_exists=false" >> $GITHUB_OUTPUT
+          echo "release_branch_exists=false" >> $GITHUB_OUTPUT
         fi        
         
-    - name: Increase App Minor Version if upcoming release branch is already created
+    - name: Increase App Minor Version If release branch is already created and Create Tag
       id: increase_app_version
-      if: success() && steps.check_branch.outputs.branch_exists == 'true'
+      if: success() && steps.check_release_branch_exists.outputs.branch_exists == 'true'
       run: |
         IFS='.' read -r major minor patch <<< "$VERSION"
         ((minor++))
         NEW_VERSION="${major}.${minor}.${patch}"
-        NEW_TAG="${NEW_VERSION}-alpha.0"
+        NEW_TAG="${NEW_VERSION}-alpha.1"
         echo "TAG=$NEW_TAG" >> $GITHUB_ENV
           
-    - name: Increase Tag and Publish
+    - name: Increase Tag for Stage If release branch isn't created
       if: steps.increase_app_version.outcome == 'skipped'
       run: |
           TAG=$(git tag --list "$VERSION-alpha.*" --sort=-version:refname | head -n 1)
@@ -57,7 +56,7 @@ jobs:
           git tag ${{env.NEW_TAG}}
           git push origin ${{env.NEW_TAG}}
       
-    - name: Print new tag
+    - name: Print New tag
       id: create_tag
       run: echo "${{ env.NEW_TAG}}"
       
