@@ -54,7 +54,7 @@ jobs:
       run: |
           TAG=$(git tag --list "${{ env.TARGETTED_VERSION }}-alpha.*" --sort=-version:refname | head -n 1)
           if [ -z "$TAG" ]; then
-            NEW_TAG="${env.TARGETTED_VERSION}-alpha.1"
+            NEW_TAG="${{env.TARGETTED_VERSION}}-alpha.1"
           else
             NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-alpha."$5 + 1}')
           fi
