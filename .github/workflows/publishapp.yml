@@ -21,9 +21,9 @@ jobs:
       
       - name: Commit Data
         run: |
-          echo "Commit SHA: ${{ context.sha }}"
-          echo "Owner: ${{ context.repo.owner }}"
-          echo "Repo: ${{ context.repo.owner }}"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "Owner: ${{ github.repository_owner }}"
+          echo "Repo: ${{ github.event.repository.name }}"
           
       - uses: actions/github-script@v7
         id: get_pr_data
@@ -31,9 +31,9 @@ jobs:
           script: |
               return (
                 await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  commit_sha: context.sha,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
+                  commit_sha: ${{ github.sha }},
+                  owner: ${{ github.repository_owner }},
+                  repo: ${{ github.event.repository.name }},
                 })
               ).data[0];
       - name: Pull Request data
