@@ -32,8 +32,19 @@ jobs:
             repo: context.repo.repo
             });
             
+
             if (response.data.length > 0) {
-              return response.data[0].title;   
+              const prTitle = response.data[0].title;
+              console.log(prTitle);
+              const ticketNumberRegex = /\[([A-Za-z]+-\d+)\]/; // Regex to extract ticket number like [SCAT-1234]
+              const matches = prTitle.match(ticketNumberRegex);
+              const ticketNumber = matches ? matches[1] : null;
+              if (ticketNumber) {
+                console.log(`Ticket number: ${ticketNumber}`);
+                return ticketNumber;
+              } else {
+                console.log('No ticket number found in the title.');
+              }
             } else {
                 throw new Error('No pull request found for the commit SHA.');
             }
