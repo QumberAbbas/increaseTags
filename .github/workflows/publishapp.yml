@@ -38,15 +38,22 @@ jobs:
             });
             
             if (response.data.length > 0) {
-                console.log(response.data[0].title);
-                console.log(response.data[0].number);
-                return response.data[0];
+              const prTitle = response.data[0].title;
+              console.log(prTitle);
+              const ticketNumberRegex = /\[([A-Za-z]+-\d+)\]/; // Regex to extract ticket number like [SCAT-1234]
+              const matches = prTitle.match(ticketNumberRegex);
+              const ticketNumber = matches ? matches[1] : null;
+                if (ticketNumber) {
+                  console.log(`Ticket number: ${ticketNumber}`);
+                  process.env.TICKET_NUMBER = ticketNumber; // Set environment variable
+                } else {
+                  console.log('No ticket number found in the title.');
+                }
             } else {
-                throw new Error('No pull request found for the commit SHA.');
+              throw new Error('No pull request found for the commit SHA.');
             }
             
       - name: Pull Request data
         run: |
-          echo "PR Number: ${{ steps.get_pr_data.outputs.result.number }}"
-          echo "PR Title: ${{ steps.get_pr_data.outputs.result.title }}"
+          echo "PR Number: ${{ env.TICKET_NUMBER }}
 
