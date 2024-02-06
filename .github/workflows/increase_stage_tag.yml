@@ -44,7 +44,7 @@ jobs:
       id: increase_app_version
       if: github.ref == 'refs/heads/develop' && success() && steps.check_release_branch_exists.outputs.release_branch_exists == 'true'
       run: |
-        IFS='.' read -r major minor patch <<< "$VERSION"
+        IFS='.' read -r major minor patch <<< "${{ env.TARGETTED_VERSION }}"
         ((minor++))
         NEW_VERSION="${major}.${minor}.${patch}"
         echo "TARGETTED_VERSION=$NEW_VERSION" >> $GITHUB_ENV
