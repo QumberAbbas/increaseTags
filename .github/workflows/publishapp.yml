@@ -19,12 +19,19 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Get github token
+      id: get_workflow_token
+      uses: peter-murray/workflow-application-token-action@v3
+      with:
+          application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
+          application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
+          
           
       - name: Get Pull Request data
         id: get_pr_data
-        uses: actions/github-script@v7
+        uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.PAT }}
+          github-token: ${{ steps.get_workflow_token.outputs.token }}
           script: |
             const response = await github.rest.repos.listPullRequestsAssociatedWithCommit({
             commit_sha: context.sha,
