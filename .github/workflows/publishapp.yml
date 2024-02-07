@@ -19,15 +19,14 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Get github token
+            - name: Get github token
         id: get_workflow_token
-        uses: peter-murray/workflow-application-token-action@v3
+        uses: github-actions/peter-murray-workflow-application-token-action@v2
         with:
           application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
           application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
-          
-          
-      - name: Get Pull Request data
+
+      - name: Get Pull Request data and extract ticket number
         id: get_pr_data
         uses: actions/github-script@v6
         with:
@@ -39,7 +38,6 @@ jobs:
             repo: context.repo.repo
             });
             
-
             if (response.data.length > 0) {
               const prTitle = response.data[0].title;
               console.log(prTitle);
@@ -55,7 +53,11 @@ jobs:
             } else {
                 throw new Error('No pull request found for the commit SHA.');
             }
-          result-encoding: string
+            result-encoding: string
+
+      - name: Set Ticket Number
+        run: |
+          echo "TICKET_NUMBER=${{ steps.get_pr_data.outputs.result }}" >> $GITHUB_ENV
             
       - name: Pull Request data
         run: |
