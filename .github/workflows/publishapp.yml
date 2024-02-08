@@ -63,3 +63,6 @@ jobs:
         run: |
           echo "PR Number: ${{ steps.get_pr_data.outputs.result }}"
 
+      - name: Exit
+        run: exit 1
+
