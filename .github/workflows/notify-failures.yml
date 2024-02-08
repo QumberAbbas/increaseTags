@@ -32,3 +32,6 @@ jobs:
     - name: Print message
       id: message
       run: echo "${{ env.message}}"
+    - name: Print messages
+      id: messages
+      run: echo "${{ github.event.workflow_run.name }} - ${{ github.event.workflow_run.conclusion }} on ${{ github.event.workflow_run.head_branch }} - <${{ env.JOB_URL }}|View Failure> Failed to build and upload staging application to Firebase App Distribution Center :this-is-fine-fire:"
