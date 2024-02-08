@@ -53,7 +53,7 @@ jobs:
             } else {
                 throw new Error('No pull request found for the commit SHA.');
             }
-            result-encoding: string
+          result-encoding: string
 
       - name: Set Ticket Number
         run: |
