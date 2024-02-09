@@ -26,7 +26,7 @@ jobs:
 
       - name: Get the ticket number
         id: get_version
-        run: echo "TICKET_NUMBER=SCAT-5249" >> $GITHUB_ENV
+        run: echo "TICKET_NUMBERS=SCAT-5249" >> $GITHUB_ENV
         shell: bash
 
       - name: Get github token
@@ -74,9 +74,9 @@ jobs:
           echo "PR Number: ${{ steps.get_pr_data.outputs.result }}"
       
       - name: Add Jira Comment for Published Tag
-        if: ${{ env.TICKET_NUMBER != '' && env.TICKET_NUMBER != null }}
+        if: ${{ env.TICKET_NUMBERS != '' && env.TICKET_NUMBERS != null }}
         run: |
-          curl --location "${{ secrets.URL }}/${{ env.TICKET_NUMBER }}/comment" \
+          curl --location "${{ secrets.URL }}/${{ env.TICKET_NUMBERS }}/comment" \
           --user "${{ secrets.USER }}:${{ secrets.PASSWORD }}" \
           --header 'Content-Type: application/json' \
           --data '{"body":{"version":1,"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"'"${NEW_TAG}"'","marks":[{"type":"link","attrs":{"href":"'"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${{ env.VERSION_NUMBER_CI }}"'"}}]}]}]}}'
