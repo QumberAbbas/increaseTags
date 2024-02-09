@@ -13,68 +13,31 @@ jobs:
 
     steps:
 
-    - name: Get github token
-      id: get_workflow_token
-      uses: peter-murray/workflow-application-token-action@v3
-      with:
-          application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
-          application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
-          
     - name: Checkout
       uses: actions/checkout@v3
       with:
           fetch-depth: 0
-          token: ${{ steps.get_workflow_token.outputs.token }}
-      
-        
-    # Get version of app for upcoming release    
-    - name: Get Upcoming Release Version
-      id: get_upcoming_release_version
-      run: |
-          TARGETTED_VERSION=$(grep '^version=' version.properties | cut -d'=' -f2)
-          echo "TARGETTED_VERSION=$TARGETTED_VERSION" >> $GITHUB_ENV
-    
-    # If push is to develop branch and release branch is already created then we have to increment app minor version
-    # This can happen in case Release Commander don't publish next version of app in version.properties file after creating new branch.
-    # In case push is to release branch then we don't need this
-    - name: Check If Release Branch Is Already Created
-      if: github.ref == 'refs/heads/develop'
-      #If release branch is created and we don't have version updated in version.properties then we will increment tag as this commit is targetting dev branch not release.
-      id: check_release_branch_exists
-      run: |
-        if git show-ref --verify --quiet "refs/remotes/origin/release/${{ env.TARGETTED_VERSION }}"; then
-          echo "release_branch_exists=true" >> $GITHUB_OUTPUT
-        else
-          echo "release_branch_exists=false" >> $GITHUB_OUTPUT
-        fi        
-        
-    - name: Increase App Minor Version If Release Branch Exists
-      id: increase_app_version
-      if: github.ref == 'refs/heads/develop' && success() && steps.check_release_branch_exists.outputs.release_branch_exists == 'true'
-      run: |
-        IFS='.' read -r major minor patch <<< "${{ env.TARGETTED_VERSION }}"
-        ((minor++))
-        NEW_VERSION="${major}.${minor}.${patch}"
-        echo "TARGETTED_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          
-    - name: Increase Tag
-      run: |
-          TAG=$(git tag --list "${{ env.TARGETTED_VERSION }}-stage.*" --sort=-version:refname | head -n 1)
-          if [ -z "$TAG" ]; then
-            NEW_TAG="${{env.TARGETTED_VERSION}}-stage.1"
-          else
-            NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-stage."$5 + 1}')
-          fi
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
-    - name: Push Git Tag
-      run: |
-          git config user.name "Scoober GitHub Actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git tag ${{env.NEW_TAG}}
-          git push origin ${{env.NEW_TAG}}
+
+    - name: Get the ticket number
+      id: get_version
+      run: echo "TICKET_NUMBERS=SCAT-5249" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Get the ticket number
+      id: get_version
+      run: echo "VERSION_NUMBER_CI=3.5.0-alpha.1" >> $GITHUB_ENV
+      shell: bash
+
       
-    - name: Print published tag
-      id: print_tag
-      run: echo "${{ env.NEW_TAG}}"
+
+    - name: Add Jira Comment for Published Tag
+      if: ${{ env.TICKET_NUMBERS != '' && env.TICKET_NUMBERS != null }}
+      run: |
+        curl --location "${{ secrets.URL }}/${{ env.TICKET_NUMBERS }}/comment" \
+        --user "${{ secrets.USER }}:${{ secrets.PASSWORD }}" \
+        --header 'Content-Type: application/json' \
+        --data '{"body":{"version":1,"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"${{ env.VERSION_NUMBER_CI }}","marks":[{"type":"link","attrs":{"href":"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${{ env.VERSION_NUMBER_CI }}"}}]}]}]}}'
+          
+  
 
