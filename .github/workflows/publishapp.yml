@@ -24,7 +24,7 @@ jobs:
         run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')" >> $GITHUB_ENV
         shell: bash
 
-       - name: Get the ticket number
+      - name: Get the ticket number
         id: get_version
         run: echo "TICKET_NUMBER=SCAT-5249" >> $GITHUB_ENV
         shell: bash
