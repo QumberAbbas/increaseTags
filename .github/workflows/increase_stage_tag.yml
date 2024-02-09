@@ -78,11 +78,3 @@ jobs:
       id: print_tag
       run: echo "${{ env.NEW_TAG}}"
 
-    - name: Add Jira Comment
-      run: |
-        curl --location "${{ secrets.URL }}" \
-        --user "${{ secrets.USER }}:${{ secrets.PASSWORD }}" \
-        --header 'Content-Type: application/json' \
-        --data '{"body":{"version":1,"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"'"${NEW_TAG}"'","marks":[{"type":"link","attrs":{"href":"'"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${NEW_TAG}"'"}}]}]}]}}'
-
-      
