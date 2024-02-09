@@ -76,7 +76,7 @@ jobs:
       - name: Add Jira Comment for Published Tag
         if: ${{ env.TICKET_NUMBER != '' && env.TICKET_NUMBER != null }}
         run: |
-          curl --location "${{ secrets.URL }}/ ${{ env.TICKET_NUMBER }}/comment" \
+          curl --location "${{ secrets.URL }}/${{ env.TICKET_NUMBER }}/comment" \
           --user "${{ secrets.USER }}:${{ secrets.PASSWORD }}" \
           --header 'Content-Type: application/json' \
           --data '{"body":{"version":1,"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"'"${NEW_TAG}"'","marks":[{"type":"link","attrs":{"href":"'"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${{ env.VERSION_NUMBER_CI }}"'"}}]}]}]}}'
