@@ -78,8 +78,12 @@ jobs:
       id: print_tag
       run: echo "${{ env.NEW_TAG}}"
 
-    - name: Exit
-      run: exit 1
-      
+    - name: Add Jira Comment
+      run: |
+        curl --location "${{ secrets.URL }}" \
+        --user "${{ secrets.USER }}:${{ secrets.PASSWORD }}" \
+        --header 'Content-Type: application/json' \
+        --data '{"body":{"version":1,"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Visit "},{"type":"text","text":"W3Schools.com","marks":[{"type":"link","attrs":{"href":"https://www.w3schools.com/"}}]},{"type":"text","text":"!"}]}]}}'
+
 
       
