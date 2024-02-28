@@ -34,11 +34,11 @@ jobs:
           ticket_description: "Sync the release branch ${{ env.VERSION_NUMBER_CI }} to develop branch"
 
       - name: Increase Minor Version
-        if: endsWith(github.ref, '.0')
+        if: ${{ endsWith(github.ref, '.0') }}
         run: echo "Minor"
 
       - name: Increase Patch Version
-        if: !endsWith(github.ref, '.0')
+        if: ${{ !endsWith(github.ref, '.0') }}
         run: echo "Patch"
 
       - name: Create Pull Request
