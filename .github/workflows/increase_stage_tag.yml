@@ -21,11 +21,6 @@ jobs:
       id: get_version
       run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')" >> $GITHUB_ENV
 
-    - name: Get the ticket number
-      id: get_version
-      run: echo "TICKET_NUMBERS=SCAT-5249" >> $GITHUB_ENV
-      shell: bash
-
     - name: Create Jira Ticket
       uses: ./.github/actions/create-jira-ticket-for-release-sync
       with:
