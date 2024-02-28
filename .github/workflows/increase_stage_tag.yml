@@ -33,32 +33,32 @@ jobs:
           ticket_title: "Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
           ticket_description: "Sync the release branch ${{ env.VERSION_NUMBER_CI }} to develop branch"
 
-      - name: Increase Minor Version
-        if: endsWith(github.ref, '.0')
-        run: |
+    - name: Increase Minor Version
+      if: endsWith(github.ref, '.0')
+      run: |
           echo "Minor"
 
-      - name: Increase Patch Version
-        if: !endsWith(github.ref, '.0')
-        run: |
+    - name: Increase Patch Version
+      if: !endsWith(github.ref, '.0')
+      run: |
           echo "Patch"
 
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.PAT }}
-          commit-message: "[${{ steps.create_jira_ticket.outputs.jira-ticket-id }}] Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
-          title: "[${{ steps.create_jira_ticket.outputs.jira-ticket-id }}] Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
-          body: This is an auto-generated PR for syncing the release branch with develop. It also includes increase of app version for next release or hotfix.
-          branch: "sync_release/${{ env.VERSION_NUMBER_CI }}_to_develop"
-          base: "ref/heads/develop"
-          delete-branch: true
+    - name: Create Pull Request
+      id: cpr
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.PAT }}
+        commit-message: "[${{ steps.create_jira_ticket.outputs.jira-ticket-id }}] Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
+        title: "[${{ steps.create_jira_ticket.outputs.jira-ticket-id }}] Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
+        body: This is an auto-generated PR for syncing the release branch with develop. It also includes increase of app version for next release or hotfix.
+        branch: "sync_release/${{ env.VERSION_NUMBER_CI }}_to_develop"
+        base: "ref/heads/develop"
+        delete-branch: true
 
-      - name: Check outputs
-        if: ${{ steps.cpr.outputs.pull-request-number }}
-        shell: bash
-        run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+    - name: Check outputs
+      if: ${{ steps.cpr.outputs.pull-request-number }}
+      shell: bash
+      run: |
+        echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+        echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
 
