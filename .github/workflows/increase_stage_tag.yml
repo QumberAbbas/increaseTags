@@ -17,18 +17,15 @@ jobs:
       with:
           fetch-depth: 0
 
+    - name: Get the version
+      id: get_version
+      run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')" >> $GITHUB_ENV
 
     - name: Get the ticket number
       id: get_version
       run: echo "TICKET_NUMBERS=SCAT-5249" >> $GITHUB_ENV
       shell: bash
 
-    - name: Get the ticket number
-      id: get_versions
-      run: echo "VERSION_NUMBER_CI=3.5.0-alpha.1" >> $GITHUB_ENV
-      shell: bash
-
-      
     - name: Create Jira Ticket
       uses: ./.github/actions/create-jira-ticket-for-release-sync
       with:
@@ -37,7 +34,7 @@ jobs:
         jira_user: ${{ secrets.JIRA_USER }}
         jira_access_token: ${{ secrets.JIRA_API_KEY }}
         ticket_parent_id: ${{ secrets.JIRA_PARENT_TICKET }}
-        ticket_title: "Test Ticket for syncing release branch with develop"
+        ticket_title: "Test Ticket for syncing release branch ${{ env.VERSION_NUMBER_CI }} with develop"
         ticket_description: "Test ticket description"
 
     - name: Check Tag Name and Do Something
