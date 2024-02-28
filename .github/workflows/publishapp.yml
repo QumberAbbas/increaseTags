@@ -19,12 +19,28 @@ jobs:
         with:
           fetch-depth: 0
       
-          
-      - name: Get Pull Request data
-        id: get_pr_data
-        uses: actions/github-script@v7
+      - name: Get the version
+        id: get_versions
+        run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Get the ticket number
+        id: get_version
+        run: echo "TICKET_NUMBERS=SCAT-5249" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Get github token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v3
         with:
-          github-token: ${{ secrets.PAT }}
+          application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
+          application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
+
+      - name: Get Pull Request data and extract ticket number
+        id: get_pr_data
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ steps.get_workflow_token.outputs.token }}
           script: |
             const response = await github.rest.repos.listPullRequestsAssociatedWithCommit({
             commit_sha: context.sha,
@@ -32,7 +48,6 @@ jobs:
             repo: context.repo.repo
             });
             
-
             if (response.data.length > 0) {
               const prTitle = response.data[0].title;
               console.log(prTitle);
@@ -49,8 +64,21 @@ jobs:
                 throw new Error('No pull request found for the commit SHA.');
             }
           result-encoding: string
+
+      - name: Set Ticket Number
+        run: |
+          echo "TICKET_NUMBER=${{ steps.get_pr_data.outputs.result }}" >> $GITHUB_ENV
             
       - name: Pull Request data
         run: |
           echo "PR Number: ${{ steps.get_pr_data.outputs.result }}"
+      
+      - name: Add Jira Comment for Published Tag
+        if: ${{ env.TICKET_NUMBERS != '' && env.TICKET_NUMBERS != null }}
+        run: |
+          curl --location "${{ secrets.URL }}/${{ env.TICKET_NUMBERS }}/comment" \
+          --user "${{ secrets.USER }}:${{ secrets.PASSWORD }}" \
+          --header 'Content-Type: application/json' \
+          --data '{"body":{"version":1,"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"'"${{ env.VERSION_NUMBER_CI }}"'","marks":[{"type":"link","attrs":{"href":"'"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${{ env.VERSION_NUMBER_CI }}"'"}}]}]}]}}'
+
 

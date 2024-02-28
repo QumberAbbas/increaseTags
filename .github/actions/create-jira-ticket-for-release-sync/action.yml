@@ -1,0 +1,44 @@
+name: Create Jira Ticket
+description: Create a ticket on Scoober board
+inputs:
+  jira_project_url:
+    required: true
+    description: Jira Project URL
+  jira_user:
+    required: true
+    description: Jira User Name
+  jira_access_token:
+    required: true
+    description: Jira Access Token
+  jira_project_id:
+    required: true
+    description: Jira Project Id
+  ticket_parent_id:
+    required: true
+    description: Jira Ticket Parent Id
+  ticket_title:
+    required: true
+    description: Ticket Title
+  ticket_description:
+    required: true
+    description: Ticket Description
+outputs:
+  jira-ticket-id:
+    description: "Jira Ticket id number"
+    value: ${{ steps.create-jira-ticket.outputs.jira_ticket_id }}
+
+runs:
+  using: composite
+  steps:
+    - name: Create Jira Tikcet
+      id: create-jira-ticket
+      # issueType 3 means we are creating a task
+      shell: bash
+      run: |
+        response=$(curl --location "https://reqres.in/api/users/2" \
+        --header 'Content-Type: application/json')
+        echo "api_response=$(echo $response)" >> $GITHUB_OUTPUT
+        jira_ticket_id=$(echo "$response" | jq -r '.data.first_name')
+        echo "jira_ticket_id=$jira_ticket_id" >> $GITHUB_OUTPUT
+        echo "Ticket Id $jira_ticket_id"
+

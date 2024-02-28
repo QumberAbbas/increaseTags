@@ -2,9 +2,8 @@ name: Publish Tag for Development Branch
 
 on:
   push:
-    branches:
-      - develop
-      - 'release**'
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
     
 jobs:
   publish_tag:
@@ -13,70 +12,39 @@ jobs:
 
     steps:
 
-    - name: Get github token
-      id: get_workflow_token
-      uses: peter-murray/workflow-application-token-action@v3
-      with:
-          application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
-          application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
-          
     - name: Checkout
       uses: actions/checkout@v3
       with:
           fetch-depth: 0
-          token: ${{ steps.get_workflow_token.outputs.token }}
-      
-        
-    # Get version of app for upcoming release    
-    - name: Get Upcoming Release Version
-      id: get_upcoming_release_version
+
+    - name: Get the version
+      id: get_version
+      run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')" >> $GITHUB_ENV
+
+    - name: Create Jira Ticket
+      id: create_jira_ticket
+      uses: ./.github/actions/create-jira-ticket-for-release-sync
+      with:
+        jira_project_url: ${{ secrets.JIRA_PROJECT_URL }}
+        jira_project_id: ${{ secrets.JIRA_PROJECT_ID }}
+        jira_user: ${{ secrets.JIRA_USER }}
+        jira_access_token: ${{ secrets.JIRA_API_KEY }}
+        ticket_parent_id: ${{ secrets.JIRA_PARENT_TICKET }}
+        ticket_title: "Test Ticket for syncing release branch ${{ env.VERSION_NUMBER_CI }} with develop"
+        ticket_description: "Test ticket description"
+
+    - name: Extract Key from Jira Ticket Creation Response
+      id: extract_key
       run: |
-          TARGETTED_VERSION=$(grep '^version=' version.properties | cut -d'=' -f2)
-          echo "TARGETTED_VERSION=$TARGETTED_VERSION" >> $GITHUB_ENV
-    
-    # If push is to develop branch and release branch is already created then we have to increment app minor version
-    # This can happen in case Release Commander don't publish next version of app in version.properties file after creating new branch.
-    # In case push is to release branch then we don't need this
-    - name: Check If Release Branch Is Already Created
-      if: github.ref == 'refs/heads/develop'
-      #If release branch is created and we don't have version updated in version.properties then we will increment tag as this commit is targetting dev branch not release.
-      id: check_release_branch_exists
+        echo "Id is ${{ steps.create_jira_ticket.outputs.jira_ticket_id }}"
+
+
+    - name: Check Tag Name and Do Something
+      if: endsWith(github.ref, '.0')
       run: |
-        if git show-ref --verify --quiet "refs/remotes/origin/release/${{ env.TARGETTED_VERSION }}"; then
-          echo "release_branch_exists=true" >> $GITHUB_OUTPUT
-        else
-          echo "release_branch_exists=false" >> $GITHUB_OUTPUT
-        fi        
-        
-    - name: Increase App Minor Version If Release Branch Exists
-      id: increase_app_version
-      if: github.ref == 'refs/heads/develop' && success() && steps.check_release_branch_exists.outputs.release_branch_exists == 'true'
-      run: |
-        IFS='.' read -r major minor patch <<< "${{ env.TARGETTED_VERSION }}"
-        ((minor++))
-        NEW_VERSION="${major}.${minor}.${patch}"
-        echo "TARGETTED_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          
-    - name: Increase Tag
-      run: |
-          TAG=$(git tag --list "${{ env.TARGETTED_VERSION }}-stage.*" --sort=-version:refname | head -n 1)
-          if [ -z "$TAG" ]; then
-            NEW_TAG="${{env.TARGETTED_VERSION}}-stage.1"
+        version="${{ github.ref }}"
+          if [[ $version =~ \.0$ ]]; then
+            echo "Performing an action for version $version."
           else
-            NEW_TAG=$(echo "$TAG" | awk -F'[-.]' '{print $1"."$2"."$3"-stage."$5 + 1}')
+            echo "Performing another action for version $version."
           fi
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
-
-    - name: Push Git Tag
-      run: |
-          git config user.name "Scoober GitHub Actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git tag ${{env.NEW_TAG}}
-          git push origin ${{env.NEW_TAG}}
-      
-    - name: Print published tag
-      id: print_tag
-      run: echo "${{ env.NEW_TAG}}"
-      
-
-      
