@@ -36,12 +36,12 @@ jobs:
     - name: Increase Minor Version
       if: endsWith(github.ref, '.0')
       run: |
-          echo "Minor"
+        echo "Minor"
 
     - name: Increase Patch Version
       if: !endsWith(github.ref, '.0')
       run: |
-          echo "Patch"
+        echo "Patch"
 
     - name: Create Pull Request
       id: cpr
