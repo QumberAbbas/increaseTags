@@ -31,4 +31,4 @@ runs:
       run: |
         response=$(curl --location "https://reqres.in/api/users/2" \
         --header 'Content-Type: application/json')
-        echo "::set-output name=response::$response"
+        echo "JIRA_API_RESPONSE::$response" >> $GITHUB_ENV
