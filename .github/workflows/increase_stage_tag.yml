@@ -22,6 +22,7 @@ jobs:
       run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')" >> $GITHUB_ENV
 
     - name: Create Jira Ticket
+      id: create_jira_ticket
       uses: ./.github/actions/create-jira-ticket-for-release-sync
       with:
         jira_project_url: ${{ secrets.JIRA_PROJECT_URL }}
@@ -31,6 +32,11 @@ jobs:
         ticket_parent_id: ${{ secrets.JIRA_PARENT_TICKET }}
         ticket_title: "Test Ticket for syncing release branch ${{ env.VERSION_NUMBER_CI }} with develop"
         ticket_description: "Test ticket description"
+
+    - name: Extract Key from Jira Ticket Creation Response
+      id: extract_key
+      run: |
+        echo "JIRA_TICKET=$(echo "${{ steps.create_jira_ticket.outputs.response }}" | jq -r '.key')" >> $GITHUB_ENV
 
     - name: Check Tag Name and Do Something
       if: endsWith(github.ref, '.0')
