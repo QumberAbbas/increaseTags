@@ -35,7 +35,7 @@ jobs:
         jira_project_url: ${{ secrets.JIRA_PROJECT_URL }}
         jira_project_id: ${{ secrets.JIRA_PROJECT_ID }}
         jira_user: ${{ secrets.JIRA_USER }}
-        jira_access_token-id: ${{ secrets.JIRA_API_KEY }}
+        jira_access_token: ${{ secrets.JIRA_API_KEY }}
         ticket_parent_id: ${{ secrets.JIRA_PARENT_TICKET }}
         ticket_title: "Test Ticket for syncing release branch with develop"
         ticket_description: "Test ticket description"
