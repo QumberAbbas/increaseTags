@@ -25,15 +25,17 @@ inputs:
 outputs:
   jira-ticket-id:
     description: "Jira Ticket id number"
-    value: ${{ steps.random-number-generator.outputs.random-number }}
+    value: ${{ steps.create-jira-ticket.outputs.jira-ticket-id }}
+
 runs:
   using: composite
   steps:
     - name: Create Jira Tikcet
+      id: create-jira-ticket
       # issueType 3 means we are creating a task
       shell: bash
       run: |
         response=$(curl --location "https://reqres.in/api/users/2" \
         --header 'Content-Type: application/json')
         echo "api-response=$(echo $response)"
-        echo "jira-ticket-id=$(echo $api-response | jq -r '.first_name')" >> $GITHUB_OUTPUT
+        echo "jira-ticket-id=$(echo $api-response | jq -r '.data.first_name')" >> $GITHUB_OUTPUT
