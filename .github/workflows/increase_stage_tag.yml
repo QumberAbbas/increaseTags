@@ -2,9 +2,8 @@ name: Publish Tag for Development Branch
 
 on:
   push:
-    branches:
-      - develop
-      - 'release**'
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
     
 jobs:
   publish_tag:
@@ -30,14 +29,23 @@ jobs:
       shell: bash
 
       
+    - name: Create Jira Ticket
+      uses: ./.github/actions/create-jira-ticket-for-release-sync
+      with:
+        jira_project_url: ${{ secrets.JIRA_PROJECT_URL }}
+        jira_project_id: ${{ secrets.JIRA_PROJECT_ID }}
+        jira_user: ${{ secrets.JIRA_USER }}
+        jira_access_token-id: ${{ secrets.JIRA_API_KEY }}
+        ticket_parent_id: ${{ secrets.JIRA_PARENT_TICKET }}
+        ticket_title: "Test Ticket for syncing release branch with develop"
+        ticket_description: "Test ticket description"
 
-    - name: Add Jira Comment for Published Tag
-      if: ${{ env.TICKET_NUMBERS != '' && env.TICKET_NUMBERS != null }}
+    - name: Check Tag Name and Do Something
+      if: endsWith(github.ref, '.0')
       run: |
-        curl --location "${{ secrets.URL }}/${{ env.TICKET_NUMBERS }}/comment" \
-        --user "${{ secrets.USER }}:${{ secrets.PASSWORD }}" \
-        --header 'Content-Type: application/json' \
-        --data '{"body":{"version":1,"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"'"${{ env.VERSION_NUMBER_CI }}"'","marks":[{"type":"link","attrs":{"href":"'"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${{ env.VERSION_NUMBER_CI }}"'"}}]}]}]}}'
-          
-  
-
+        version="${{ github.ref }}"
+          if [[ $version =~ \.0$ ]]; then
+            echo "Performing an action for version $version."
+          else
+            echo "Performing another action for version $version."
+          fi
