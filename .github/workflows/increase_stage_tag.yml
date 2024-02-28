@@ -36,7 +36,7 @@ jobs:
     - name: Extract Key from Jira Ticket Creation Response
       id: extract_key
       run: |
-        echo "Id is ${{ steps.create_jira_ticket.outputs.jira-ticket-id }}"
+        echo "Id is ${{ steps.create_jira_ticket.outputs.jira_ticket_id }}"
 
 
     - name: Check Tag Name and Do Something
