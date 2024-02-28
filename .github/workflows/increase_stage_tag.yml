@@ -21,17 +21,17 @@ jobs:
       id: get_version
       run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')" >> $GITHUB_ENV
 
-          - name: Create Jira Ticket
-        id: create_jira_ticket
-        uses: ./.github/actions/create-jira-ticket-for-release-sync
-        with:
-          jira_project_url: ${{ secrets.JIRA_PROJECT_URL }}
-          jira_project_id: ${{ secrets.JIRA_PROJECT_ID }}
-          jira_user: ${{ secrets.JIRA_USER }}
-          jira_access_token: ${{ secrets.JIRA_API_KEY }}
-          ticket_parent_id: ${{ secrets.JIRA_PARENT_TICKET }}
-          ticket_title: "Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
-          ticket_description: "Sync the release branch ${{ env.VERSION_NUMBER_CI }} to develop branch"
+    - name: Create Jira Ticket
+      id: create_jira_ticket
+      uses: ./.github/actions/create-jira-ticket-for-release-sync
+      with:
+        jira_project_url: ${{ secrets.JIRA_PROJECT_URL }}
+        jira_project_id: ${{ secrets.JIRA_PROJECT_ID }}
+        jira_user: ${{ secrets.JIRA_USER }}
+        jira_access_token: ${{ secrets.JIRA_API_KEY }}
+        ticket_parent_id: ${{ secrets.JIRA_PARENT_TICKET }}
+        ticket_title: "Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
+        ticket_description: "Sync the release branch ${{ env.VERSION_NUMBER_CI }} to develop branch"
 
     - name: Increase Minor Version
       if: endsWith(github.ref, '.0')
