@@ -1,0 +1,35 @@
+name: Create Jira Ticket
+description: Create a ticket on Scoober board
+inputs:
+  jira_project_url:
+    required: true
+    description: Jira Project URL
+  jira_user:
+    required: true
+    description: Jira User Name
+  jira_access_token:
+    required: true
+    description: Jira Access Token
+  jira_project_id:
+    required: true
+    description: Jira Project Id
+  ticket_parent_id:
+    required: true
+    description: Jira Ticket Parent Id
+  ticket_title:
+    required: true
+    description: Ticket Title
+  ticket_description:
+    required: true
+    description: Ticket Description
+runs:
+  using: composite
+  steps:
+    - name: Create Jira Tikcet
+      # issueType 3 means we are creating a task
+      shell: bash
+      run: |
+        curl --location "${{ inputs.jira_project_url }}/rest/api/3/issue" \
+        --user "${{ inputs.jira_user }}:${{ inputs.jira_access_token }}" \
+        --header 'Content-Type: application/json' \
+        --data '{"fields": { "summary": "'"${{ inputs.ticket_title }}"'", "issuetype": { "id": "3" }, "parent": {"key": "'"${{ inputs.ticket_parent_id }}"'"}, "project": {"id": "'"${{ inputs.jira_project_id }}"'"}, "description": "'"${{ inputs.ticket_description }}"'", "labels": [ "android" ] }}'
