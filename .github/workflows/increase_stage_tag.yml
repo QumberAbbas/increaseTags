@@ -52,7 +52,7 @@ jobs:
         title: "[${{ steps.create_jira_ticket.outputs.jira-ticket-id }}] Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
         body: This is an auto-generated PR for syncing the release branch with develop. It also includes increase of app version for next release or hotfix.
         branch: "sync_release/${{ env.VERSION_NUMBER_CI }}_to_develop"
-        base: "ref/heads/develop"
+        base: "refs/heads/develop"
         delete-branch: true
 
     - name: Check outputs
