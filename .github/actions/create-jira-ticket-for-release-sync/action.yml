@@ -37,7 +37,7 @@ runs:
       run: |
         response=$(curl --location "https://reqres.in/api/users/2" \
         --header 'Content-Type: application/json')
-        echo "api-response=$(echo $response)"
+        echo "api_response=$(echo $response)"
         echo 'jira_ticket_id='"$(echo "${api_response}" | jq -r '.data.first_name')" >> $GITHUB_OUTPUT
         echo "Ticket Id $jira_ticket_id" 
 
