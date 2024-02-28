@@ -35,10 +35,35 @@ runs:
       # issueType 3 means we are creating a task
       shell: bash
       run: |
-        response=$(curl --location "https://reqres.in/api/users/2" \
-        --header 'Content-Type: application/json')
-        echo "api_response=$(echo $response)" >> $GITHUB_OUTPUT
-        jira_ticket_id=$(echo "$response" | jq -r '.data.first_name')
+        response=$(curl --location "${{ inputs.jira_project_url }}/rest/api/3/issue" \
+        --user "${{ inputs.jira_user }}:${{ inputs.jira_access_token }}" \
+        --header 'Content-Type: application/json' \
+        --data '{
+                  "fields": {
+                    "summary": "'"${{ inputs.ticket_title }}"'",
+                    "issuetype": {"id": "3"},
+                    "project": {"id": "'"${{ inputs.jira_project_id }}"'"},
+                    "parent": {"key": "'"${{ inputs.ticket_parent_id }}"'"},
+                    "description": {
+                      "type": "doc",
+                      "version": 1,
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "content": [
+                            {
+                              "type": "text",
+                              "text": "'"${{ inputs.ticket_description }}"'"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "labels": ["android"]
+                }')
+
+        jira_ticket_id=$(echo "$response" | jq -r '.key')
         echo "jira_ticket_id=$jira_ticket_id" >> $GITHUB_OUTPUT
         echo "Ticket Id $jira_ticket_id"
 
