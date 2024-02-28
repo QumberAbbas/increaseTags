@@ -29,5 +29,6 @@ runs:
       # issueType 3 means we are creating a task
       shell: bash
       run: |
-        curl --location "https://reqres.in/api/users/2" \
-        --header 'Content-Type: application/json' \
+        response = $(curl --location "https://reqres.in/api/users/2" \
+        --header 'Content-Type: application/json')
+        echo "::set-output name=response::$response"
