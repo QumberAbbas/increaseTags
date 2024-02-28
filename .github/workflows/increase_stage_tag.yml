@@ -47,6 +47,7 @@ jobs:
         branch: "sync_release/${{ env.VERSION_NUMBER_CI }}_to_develop"
         base: 'refs/heads/develop'
         delete-branch: true
+        token: ${{secrets.PAT}}
 
     - name: Check Tag Name and Do Something
       if: endsWith(github.ref, '.0')
