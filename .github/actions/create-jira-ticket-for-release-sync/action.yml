@@ -22,6 +22,10 @@ inputs:
   ticket_description:
     required: true
     description: Ticket Description
+outputs:
+  jira-ticket-id:
+    description: "Jira Ticket id number"
+    value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
   using: composite
   steps:
@@ -31,4 +35,5 @@ runs:
       run: |
         response=$(curl --location "https://reqres.in/api/users/2" \
         --header 'Content-Type: application/json')
-        echo "JIRA_API_RESPONSE::$response" >> $GITHUB_ENV
+        echo "api-response=$(echo $response)"
+        echo "jira-ticket-id=$(echo $api-response | jq -r '.first_name')" >> $GITHUB_OUTPUT
