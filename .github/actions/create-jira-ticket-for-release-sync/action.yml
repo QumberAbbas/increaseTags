@@ -29,30 +29,5 @@ runs:
       # issueType 3 means we are creating a task
       shell: bash
       run: |
-        curl --location "${{ inputs.jira_project_url }}/rest/api/3/issue" \
-        --user "${{ inputs.jira_user }}:${{ inputs.jira_access_token }}" \
+        curl --location "https://reqres.in/api/users/2" \
         --header 'Content-Type: application/json' \
-        --data '{
-                  "fields": {
-                    "summary": "'"${{ inputs.ticket_title }}"'",
-                    "issuetype": {"id": "3"},
-                    "project": {"id": "'"${{ inputs.jira_project_id }}"'"},
-                    "parent": {"key": "'"${{ inputs.ticket_parent_id }}"'"},
-                    "description": {
-                      "type": "doc",
-                      "version": 1,
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "'"${{ inputs.ticket_description }}"'"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "labels": ["android"]
-                }'

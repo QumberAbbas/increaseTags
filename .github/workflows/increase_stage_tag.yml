@@ -36,6 +36,7 @@ jobs:
     - name: Extract Key from Jira Ticket Creation Response
       id: extract_key
       run: |
+        echo "${{ steps.create_jira_ticket.outputs.response }}"
         echo "JIRA_TICKET=$(echo "${{ steps.create_jira_ticket.outputs.response }}" | jq -r '.key')" >> $GITHUB_ENV
 
     - name: Check Tag Name and Do Something
