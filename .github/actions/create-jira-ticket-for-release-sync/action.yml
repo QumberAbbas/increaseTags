@@ -32,4 +32,27 @@ runs:
         curl --location "${{ inputs.jira_project_url }}/rest/api/3/issue" \
         --user "${{ inputs.jira_user }}:${{ inputs.jira_access_token }}" \
         --header 'Content-Type: application/json' \
-        --data '{"fields": { "summary": "'"${{ inputs.ticket_title }}"'", "issuetype": { "id": "3" }, "parent": {"key": "'"${{ inputs.ticket_parent_id }}"'"}, "project": {"id": "'"${{ inputs.jira_project_id }}"'"}, "description": "'"${{ inputs.ticket_description }}"'", "labels": [ "android" ] }}'
+        --data '{
+                  "fields": {
+                    "summary": "'"${{ inputs.ticket_title }}"'",
+                    "issuetype": {"id": "3"},
+                    "project": {"id": "'"${{ inputs.jira_project_id }}"'"},
+                    "parent": {"key": "'"${{ inputs.ticket_parent_id }}"'"},
+                    "description": {
+                      "type": "doc",
+                      "version": 1,
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "content": [
+                            {
+                              "type": "text",
+                              "text": "'"${{ inputs.ticket_description }}"'"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "labels": ["android"]
+                }'
