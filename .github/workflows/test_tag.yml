@@ -1,0 +1,28 @@
+name: Publish Tag for Development Branch
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]"
+    
+jobs:
+  publish_tag:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
+
+      - name: Get the version
+        id: get_version
+        run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')" >> $GITHUB_ENV
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
