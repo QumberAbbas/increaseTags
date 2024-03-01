@@ -1,4 +1,4 @@
-name: Publish Tag for Development Branch
+name: Publish tag for development branch
 
 on:
   push:
