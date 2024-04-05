@@ -38,7 +38,7 @@ jobs:
      
       - name: Create new branch
         run: |
-          git fetch --all
+          git fetch origin release/3.5.0
           git checkout -b sync_release/3.5.0 refs/heads/release/3.5.0 -f
           git push origin sync_release/3.5.0 -f
         
