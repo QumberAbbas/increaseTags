@@ -29,7 +29,13 @@ jobs:
 
       - name: Get the version
         id: get_version
-        run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p'  | sed 's/\.[0-9]*$/\.0/')" >> $GITHUB_ENV   
+        run: echo "RELEASE_BRANCH=release/$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p'  | sed 's/\.[0-9]*$/\.0/')" >> $GITHUB_ENV   
+
+      - name: Rebase sync_release/3.7.0 with release/3.7.0
+        run: |
+          git checkout sync_release/3.7.0
+          git rebase {{ env.RELEASE_BRANCH }}
+          git push --force origin sync_release/3.7.0
 
       - name: Create Pull Request
         id: cpr
@@ -40,6 +46,5 @@ jobs:
           title: "Sync release branch to develop"
           body: This is an auto-generated PR for syncing the release branch with develop. It also includes increase of app version for next release or hotfix.
           branch: "sync_release/3.7.0"
-          base: "release/${{ env.VERSION_NUMBER_CI }}"
+          base: "{{ env.RELEASE_BRANCH }}"
           delete-branch: true
-
