@@ -41,8 +41,7 @@ jobs:
         run: |
           git checkout ${{ env.RELEASE_BRANCH }}
           git pull origin ${{ env.RELEASE_BRANCH }}
-          git checkout -b sync_release/3.7.0
-          git rebase --onto ${{ env.RELEASE_BRANCH }} ${{ env.RELEASE_BRANCH }} sync_release/3.7.0
+          git checkout -b sync_release/3.7.0 ${{ env.RELEASE_BRANCH }}
           git push origin HEAD:sync_release/3.7.0 -f
         
 
