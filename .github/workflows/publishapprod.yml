@@ -34,6 +34,7 @@ jobs:
       - name: Create new branch
         run: |
           git checkout ${{ env.RELEASE_BRANCH }}
+          git checkout -b sync_release/3.7.0 ${{ env.RELEASE_BRANCH }}
           
       - name: Create Pull Request
         id: cpr
