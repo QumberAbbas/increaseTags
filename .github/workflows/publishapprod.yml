@@ -1,4 +1,4 @@
-name: Build and Publish to Staging
+name: Build and Publish to Prod
 on:
   push:
     tags:
@@ -31,11 +31,12 @@ jobs:
         id: get_version
         run: echo "RELEASE_BRANCH=release/$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p'  | sed 's/\.[0-9]*$/\.0/')" >> $GITHUB_ENV   
 
-      - name: Rebase sync_release/3.7.0 with release/3.7.0
+      - name: Rebasing
         run: |
-          git checkout -b sync_release/3.7.0
+          git checkout -b sync_release/3.5.0
           git rebase ${{ env.RELEASE_BRANCH }}
-          git push --force origin sync_release/3.7.0
+          git push --force origin sync_release/3.5.0
+          
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v5
