@@ -62,6 +62,7 @@ jobs:
       - name: Create Pull Request
         uses: actions/github-script@v6
         with:
+          github-token: ${{ steps.get_workflow_token.outputs.token }}
           script: |
             const { repo, owner } = context.repo;
             const result = await github.rest.pulls.create({
@@ -75,5 +76,3 @@ jobs:
                 '[actions/github-script](https://github.com/actions/github-script).'
               ].join('\n')
             });
-        env:
-          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
