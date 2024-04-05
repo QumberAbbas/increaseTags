@@ -1,4 +1,4 @@
-name: Build and Publish to Prod
+name: Workflow Build and Publish to Production
 on:
   push:
     tags:
@@ -9,7 +9,7 @@ jobs:
     
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: read
 
     steps:
@@ -31,11 +31,11 @@ jobs:
         id: get_version
         run: echo "RELEASE_BRANCH=release/$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p'  | sed 's/\.[0-9]*$/\.0/')" >> $GITHUB_ENV   
 
-      - name: Rebasing
+      - name: Create new branch
         run: |
-          git checkout -b sync_release/3.5.0
-          git rebase ${{ env.RELEASE_BRANCH }}
-          git push --force origin sync_release/3.5.0
+          git checkout ${{ env.RELEASE_BRANCH }}
+          git checkout -b sync_release/3.7.0 ${{ env.RELEASE_BRANCH }}
+          git push origin sync_release/3.7.0
           
       - name: Create Pull Request
         id: cpr
