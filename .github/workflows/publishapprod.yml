@@ -33,8 +33,7 @@ jobs:
 
       - name: Create new branch
         run: |
-          git fetch origin
-          git branch --list 'release/3.5.0'
+          git checkout ${{ env.RELEASE_BRANCH }}
           git checkout -b sync_release/3.5.0 ${{ env.RELEASE_BRANCH }}
           
       - name: Create Pull Request
