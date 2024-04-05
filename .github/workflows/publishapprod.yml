@@ -1,4 +1,4 @@
-name: Build and Publish to Production
+name: Workflow Build and Publish to Production
 on:
   push:
     tags:
