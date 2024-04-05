@@ -35,8 +35,8 @@ jobs:
       - name: Create new branch
         run: |
           git checkout ${{ env.RELEASE_BRANCH }}
-          git checkout -b sync_release/3.7.0 ${{ env.RELEASE_BRANCH }}
-          git push origin sync_release/3.7.0
+          git checkout -b sync_release/3.5.0 ${{ env.RELEASE_BRANCH }}
+          git push origin sync_release/3.5.0
           
       - name: Create Pull Request
         id: cpr
@@ -46,6 +46,6 @@ jobs:
           commit-message: "Sync release branch to develop"
           title: "Sync release branch to develop"
           body: This is an auto-generated PR for syncing the release branch with develop. It also includes increase of app version for next release or hotfix.
-          branch: "sync_release/3.7.0"
+          branch: "sync_release/3.5.0"
           base: "develop"
           delete-branch: true
