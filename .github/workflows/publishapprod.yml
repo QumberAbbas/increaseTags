@@ -35,8 +35,8 @@ jobs:
         run: |
           git checkout ${{ env.RELEASE_BRANCH }}
           git checkout -b sync_release/3.7.0 ${{ env.RELEASE_BRANCH }}
-          echo "$(git rev-list --right-only --count develop...sync_release/3.7.0)"
           git push origin sync_release/3.7.0
+          echo "$(git rev-list --right-only --count develop...sync_release/3.7.0)"
           
       - name: Create Pull Request
         id: cpr
