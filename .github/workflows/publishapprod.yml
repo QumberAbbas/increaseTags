@@ -75,3 +75,5 @@ jobs:
                 '[actions/github-script](https://github.com/actions/github-script).'
               ].join('\n')
             });
+        env:
+          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
