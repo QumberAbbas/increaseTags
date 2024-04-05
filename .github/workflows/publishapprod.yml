@@ -27,7 +27,7 @@ jobs:
       - name: Compare branches
         run: |
           git fetch origin develop
-          git log origin/release/${{ env.RELEASE_BRANCH }} ^origin/develop --oneline
+          git log origin/${{ env.RELEASE_BRANCH }} ^origin/develop --oneline
 
       - name: Get github token
         id: get_workflow_token
