@@ -1,4 +1,4 @@
-name: Build and Publish to Staging
+name: Build and Publish to Prod
 on:
   push:
     tags:
