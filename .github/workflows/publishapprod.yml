@@ -31,9 +31,10 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v5
         with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: "Sync release branch to develop"
           title: "Sync release branch to develop"
           body: This is an auto-generated PR for syncing the release branch with develop. It also includes increase of app version for next release or hotfix.
-          branch: "${{ steps.create_jira_ticket.outputs.jira-ticket-id }}/sync_release/${{ env.VERSION_NUMBER_CI }}_to_develop"
+          branch: "sync_release/3.7.0"
           base: "develop"
           delete-branch: true
