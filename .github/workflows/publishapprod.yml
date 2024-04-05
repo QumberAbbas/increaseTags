@@ -38,10 +38,8 @@ jobs:
      
       - name: Create new branch
         run: |
-          git checkout ${{ env.RELEASE_BRANCH }}
-          git pull origin ${{ env.RELEASE_BRANCH }}
-          git checkout -b sync_release/3.5.0 ${{ env.RELEASE_BRANCH }}
-          git push origin HEAD:sync_release/3.5.0 -f
+          git checkout -b sync_release/3.5.0 ${{ env.RELEASE_BRANCH }} -f
+          git push origin sync_release/3.5.0 -f
         
 
       - name: Create Pull Request
