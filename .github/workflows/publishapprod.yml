@@ -41,7 +41,8 @@ jobs:
       
       - name: Create new branch
         run: |
-          git checkout -b sync_release/3.5.0 origin/release/3.5.0
+          git checkout -b sync_release/3.5.0
+          git pull origin release/3.5.0 --allow-unrelated-histories
           git push origin sync_release/3.5.0 -f
 
       - name: Create Pull Request
