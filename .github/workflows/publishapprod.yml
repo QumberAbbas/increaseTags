@@ -41,24 +41,8 @@ jobs:
       
       - name: Create new branch
         run: |
-          git checkout -b sync_release/3.5.0
-          git rebase origin/release/3.5.0
-          git push origin sync_release/3.5.0 -f
+          git checkout -b sync_release/3.7.1
       
-      - name: rebase new branch
-        run: |
-          git rebase origin/release/3.5.0
-          git push origin sync_release/3.5.0 -f
-          
-      - name: push new branch
-        run: |
-          git push origin sync_release/3.5.0 -f
-
-      - name: Compare branches two
-        run: |
-          git fetch origin develop
-          git log origin/sync_release/3.5.0 ^origin/develop --oneline
-          
       - name: Create Pull Request
         uses: actions/github-script@v6
         with:
