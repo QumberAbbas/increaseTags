@@ -68,5 +68,5 @@ jobs:
           title: "Sync release branch to develop"
           body: This is an auto-generated PR for syncing the release branch with develop. It also includes increase of app version for next release or hotfix.
           branch: "sync_release/3.5.0"
-          base: "develop"
+          base: "release/3.5.0"
           delete-branch: true
