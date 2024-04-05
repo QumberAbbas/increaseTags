@@ -34,10 +34,17 @@ jobs:
       - name: Create new branch
         run: |
           git checkout ${{ env.RELEASE_BRANCH }}
-          git checkout -b sync_release/3.7.0 ${{ env.RELEASE_BRANCH }}
-          git push origin sync_release/3.7.0
-          echo "$(git rev-list --right-only --count develop...sync_release/3.7.0)"
-          
+          git pull origin ${{ env.RELEASE_BRANCH }}
+          git checkout -b sync_release/3.7.0
+          git rebase --onto ${{ env.RELEASE_BRANCH }} ${{ env.RELEASE_BRANCH }} sync_release/3.7.0
+          git push origin HEAD:sync_release/3.7.0 -f
+        
+
+# Rebase the commits from feature-branch onto the main branch
+
+
+# Push the changes to the remote repository (forcefully)
+git push origin HEAD:feature-branch -f
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v5
