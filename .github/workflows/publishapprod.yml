@@ -22,6 +22,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: "release/${{ env.RELEASE_BRANCH }}"
       
       - name: Compare branches
         run: |
@@ -35,12 +36,15 @@ jobs:
           application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
           application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
 
-      
-      - name: Create branch
+      - name: Get the version
+        id: get_version
+        run: echo "RELEASE_BRANCH=release/$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p'  | sed 's/\.[0-9]*$/\.0/')" >> $GITHUB_ENV   
+
+      - name: Create new branch
         run: |
-          git checkout -b sync_release/3.9.0
-          git rebase origin/release/3.5.0
-          git push origin sync_release/3.9.0 -f
+          git checkout ${{ env.RELEASE_BRANCH }}
+          git checkout -b sync_release/3.5.0 ${{ env.RELEASE_BRANCH }}
+          git push origin sync_release/3.5.0
           
       - name: Create Pull Request
         uses: actions/github-script@v6
