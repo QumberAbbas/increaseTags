@@ -36,6 +36,11 @@ jobs:
           application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
           application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
 
+      - name: Create random text file
+        run: |
+          echo "Random text: $RANDOM" > random_text.txt
+          cat random_text.txt
+
       - name: Get the version
         id: get_version
         run: echo "RELEASE_BRANCH=release/$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p'  | sed 's/\.[0-9]*$/\.0/')" >> $GITHUB_ENV   
