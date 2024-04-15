@@ -54,10 +54,8 @@ jobs:
               echo "Changes detected."
               git add .
               git commit -m "Committing changes before creating new branch"
-              exit 0
             else
               echo "No changes detected."
-              exit 1
             fi
 
       - name: Create new branch
