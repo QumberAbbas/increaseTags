@@ -12,6 +12,7 @@ runs:
   using: composite
   steps:
     - name: Create new branch name
+      shell: bash
       run: |
         echo "SYNC_RELEASE_BRANCH=sync_release/5.0.0-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
@@ -20,7 +21,6 @@ runs:
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
         git checkout -b ${{ env.SYNC_RELEASE_BRANCH }} ${{ inputs.release-branch-name }}
-
 
     - name: Check for changes
       id: check_changes
