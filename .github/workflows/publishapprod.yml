@@ -41,11 +41,28 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           timestamp=$(date +"%Y%m%d%H%M")
-          git add .
-          git commit -m "Committing changes before creating new branch"
           git checkout ${{ env.RELEASE_BRANCH }}
-          git checkout -b sync_release/5.0.0-$timestamp ${{ env.RELEASE_BRANCH }}
+          echo "SYNC_RELEASE_BRANCH=sync_release/5.0.0-$timestamp" >> $GITHUB_ENV
+          git checkout -b ${{ env.SYNC_RELEASE_BRANCH }} ${{ env.RELEASE_BRANCH }}
           git push origin sync_release/5.0.0
+
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+            if [[ $(git status --porcelain) ]]; then
+              echo "Changes detected."
+              git add .
+              git commit -m "Committing changes before creating new branch"
+              exit 0
+            else
+              echo "No changes detected."
+              exit 1
+            fi
+
+      - name: Create new branch
+        run: |
+          git push origin ${{ env.SYNC_RELEASE_BRANCH }} 
 
       - name: Create Pull Request
         uses: actions/github-script@v6
