@@ -2,7 +2,7 @@ name: 'Notify Failures'
 
 on:
   workflow_run:
-    workflows: [ Build and Publish to Staging,  Publish Tag for Development Branch ]
+    workflows: [ Publish Tag for Development Branch ]
     types: [ completed ]
 
 env:
