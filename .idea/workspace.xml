@@ -30,6 +30,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "release/5.0.0",
     "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.lookFeel",
@@ -45,7 +47,7 @@
       <option name="presentableId" value="Default" />
       <updated>1712826954389</updated>
       <workItem from="1712826955353" duration="1111000" />
-      <workItem from="1713166060710" duration="33000" />
+      <workItem from="1713166060710" duration="305000" />
     </task>
     <servers />
   </component>
