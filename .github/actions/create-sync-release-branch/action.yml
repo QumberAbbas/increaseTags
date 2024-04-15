@@ -17,6 +17,7 @@ runs:
         echo "SYNC_RELEASE_BRANCH=sync_release/5.0.0-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
     - name: Create new branch
+      shell: bash
       run: |
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
@@ -24,6 +25,7 @@ runs:
 
     - name: Check for changes
       id: check_changes
+      shell: bash
       run: |
         if [[ $(git status --porcelain) ]]; then
           echo "Changes detected."
@@ -34,6 +36,7 @@ runs:
         fi
 
     - name: Create new branch
+      shell: bash
       run: |
         git push origin ${{ env.SYNC_RELEASE_BRANCH }} 
 
