@@ -36,10 +36,6 @@ jobs:
           application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
           application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
 
-      - name: Get the version
-        id: get_version
-        run: echo "RELEASE_BRANCH=release/$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p'  | sed 's/\.[0-9]*$/\.0/')" >> $GITHUB_ENV   
-
       - name: Create new branch
         run: |
           git checkout ${{ env.RELEASE_BRANCH }}
