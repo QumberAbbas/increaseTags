@@ -16,14 +16,14 @@ jobs:
 
       - name: Get the version
         id: get_version
-        run: echo "RELEASE_BRANCH=release/$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p'  | sed 's/\.[0-9]*$/\.0/')" >> $GITHUB_ENV   
+        run: echo "RELEASE_BRANCH=release/$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p'  | sed 's/\.[0-9]*$/\.0/')" >> $GITHUB_ENV
 
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: "release/${{ env.RELEASE_BRANCH }}"
-      
+          ref: "${{ env.RELEASE_BRANCH }}"
+
       - name: Compare branches
         run: |
           git fetch origin develop
@@ -36,20 +36,32 @@ jobs:
           application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
           application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
 
-      - name: Create random text file
+      - name: Create new branch
         run: |
-          echo "Random text: $RANDOM" > random_text.txt
-          cat random_text.txt
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          timestamp=$(date +"%Y%m%d%H%M")
+          echo "SYNC_RELEASE_BRANCH=sync_release/5.0.0-$timestamp" >> $GITHUB_ENV
+          git checkout -b ${{ env.SYNC_RELEASE_BRANCH }} ${{ env.RELEASE_BRANCH }}
+
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [[ $(git status --porcelain) ]]; then
+            echo "Changes detected."
+            git add .
+            git commit -m "Committing changes before creating new branch"
+            exit 0
+          else
+            echo "No changes detected."
+            exit 1
+          fi
 
       - name: Create new branch
         run: |
-          timestamp=$(date +"%Y%m%d%H%M")
-          git add .
-          git commit -m "Committing changes before creating new branch"
-          git checkout ${{ env.RELEASE_BRANCH }}
-          git checkout -b sync_release/5.0.0-$timestamp ${{ env.RELEASE_BRANCH }}
-          git push origin sync_release/5.0.0
-          
+          git push origin ${{ env.SYNC_RELEASE_BRANCH }} 
+
       - name: Create Pull Request
         uses: actions/github-script@v6
         with:
