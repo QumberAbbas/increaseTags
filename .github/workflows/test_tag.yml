@@ -7,9 +7,7 @@ on:
     
 jobs:
   publish_tag:
-
     runs-on: ubuntu-latest
-
     steps:
 
       - name: Checkout
