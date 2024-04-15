@@ -36,6 +36,13 @@ jobs:
           application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
           application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
 
+      - name: Create file and add text
+        run: |
+          echo "Hello, world!" > example.txt
+          echo "This is a test file." >> example.txt
+          - name: Display file contents
+          run: cat example.txt
+
       - name: Create new branch name
         uses: actions/create-sync-release-branch
         with:
