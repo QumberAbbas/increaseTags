@@ -40,8 +40,6 @@ jobs:
         run: |
           echo "Hello, world!" > example.txt
           echo "This is a test file." >> example.txt
-          - name: Display file contents
-          run: cat example.txt
 
       - name: Create new branch name
         uses: actions/create-sync-release-branch
