@@ -10,7 +10,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      CACHE_NAME: cache-dependencies-${{ hashFiles('Gemfile.lock') }}
+      CACHE_NAME:
 
     steps:
 
@@ -23,9 +23,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ env.CACHE_NAME }}
+          key: ${{ runner.os }}-cache-dependencies-${{ hashFiles('Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ env.CACHE_NAME }}
+            ${{ runner.os }}-cache-dependencies-${{ hashFiles('Gemfile.lock') }}
 
       - name: Get the version
         id: get_version
