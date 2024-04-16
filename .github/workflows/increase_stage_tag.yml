@@ -9,6 +9,8 @@ jobs:
   publish_tag:
 
     runs-on: ubuntu-latest
+    env:
+      CACHE_NAME: cache-dependencies-${{ hashFiles('Gemfile.lock') }}
 
     steps:
 
@@ -16,6 +18,14 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ env.CACHE_NAME }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.CACHE_NAME }}
 
       - name: Get the version
         id: get_version
