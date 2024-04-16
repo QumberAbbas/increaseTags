@@ -1,3 +1,4 @@
+$LOAD_PATH.unshift(File.expand_path('vendor/bundle', __dir__))
 require 'git'
 
 class MyGit
