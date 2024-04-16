@@ -27,7 +27,7 @@ jobs:
           ruby-version: 3.0.2
 
       - name: Install gems
-        run: scripts/install_gems.sh
+        run: chmod +x scripts/install_gems.sh
 
       - name: Run Ruby script
         run: ruby scripts/script.rb
