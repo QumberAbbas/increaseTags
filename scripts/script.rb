@@ -19,4 +19,4 @@ class MyPipeline
 end
 
 
-MyPipeline.release_run("/Users/qumber.abbas/Documents/increaseTags")
+MyPipeline.release_run(Dir.pwd)
