@@ -27,7 +27,7 @@ jobs:
           ruby-version: 3.0.2
 
       - name: Install dependencies
-        run: bundle install
+        run: gem install git
 
       - name: Run Ruby script
         run: ruby scripts/script.rb
