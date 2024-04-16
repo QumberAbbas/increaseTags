@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
-    
+
 jobs:
   publish_tag:
 
@@ -15,48 +15,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-            fetch-depth: 0
+          fetch-depth: 0
 
       - name: Get the version
         id: get_version
         run: echo "VERSION_NUMBER_CI=$(echo $GITHUB_REF | sed -n 's/refs\/tags\///p')" >> $GITHUB_ENV
 
-      - name: Create Jira Ticket
-        id: create_jira_ticket
-        uses: ./.github/actions/create-jira-ticket-for-release-sync
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          jira_project_url: ${{ secrets.JIRA_PROJECT_URL }}
-          jira_project_id: ${{ secrets.JIRA_PROJECT_ID }}
-          jira_user: ${{ secrets.JIRA_USER }}
-          jira_access_token: ${{ secrets.JIRA_API_KEY }}
-          ticket_parent_id: ${{ secrets.JIRA_PARENT_TICKET }}
-          ticket_title: "Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
-          ticket_description: "Sync the release branch ${{ env.VERSION_NUMBER_CI }} to develop branch"
+          ruby-version: 3.0.2
 
-      - name: Increase Minor Version
-        if: ${{ endsWith(github.ref, '.0') }}
-        run: echo "Minor"
-
-      - name: Increase Patch Version
-        if: ${{ !endsWith(github.ref, '.0') }}
-        run: echo "Patch"
-
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.PAT }}
-          commit-message: "[${{ steps.create_jira_ticket.outputs.jira-ticket-id }}] Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
-          title: "[${{ steps.create_jira_ticket.outputs.jira-ticket-id }}] Sync release branch ${{ env.VERSION_NUMBER_CI }} to develop"
-          body: This is an auto-generated PR for syncing the release branch with develop. It also includes increase of app version for next release or hotfix.
-          branch: "sync_release/${{ env.VERSION_NUMBER_CI }}_to_develop"
-          base: "refs/heads/develop"
-          delete-branch: true
-
-      - name: Check outputs
-        if: ${{ steps.cpr.outputs.pull-request-number }}
-        shell: bash
-        run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+      - name: Run Ruby script
+        run: ruby scripts/script.rb
 
