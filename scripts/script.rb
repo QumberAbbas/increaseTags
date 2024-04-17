@@ -1,8 +1,11 @@
 require 'git'
 
-param1 = ENV['PARAM1']
-
 class MyGit
+  @param1 = ENV['PARAM1'] # Define as class variable
+
+  def self.param1
+    @param1
+  end
   def self.git_last_merged_issues(git_path, pattern)
     print("param1: #{param1}\n")
     g = Git.open(git_path)
