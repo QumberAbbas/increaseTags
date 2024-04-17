@@ -31,6 +31,8 @@ jobs:
         run: gem install git
 
       - name: Run Ruby script
+        env:
+          PARAM1: ${{ env.VERSION_NUMBER_CI }}
         run: ruby scripts/script.rb
 
 

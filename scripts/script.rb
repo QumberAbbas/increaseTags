@@ -1,7 +1,10 @@
 require 'git'
 
+param1 = ENV['PARAM1']
+
 class MyGit
   def self.git_last_merged_issues(git_path, pattern)
+    print("param1: #{param1}\n")
     g = Git.open(git_path)
     latest_release_tag = "3.7.0"
     tasks_list = g.log(200).between(latest_release_tag, "HEAD").count
