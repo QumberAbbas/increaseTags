@@ -2,7 +2,7 @@ name: Publish Tag for Development Branch
 
 on:
   schedule:
-    - cron: '0 12 * * 2'
+    - cron: '40 12 * * 2'
 
 jobs:
   publish_tag:
