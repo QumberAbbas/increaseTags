@@ -1,4 +1,4 @@
-name: Publish Tag for Development Branch
+name: Scheduled Job
 
 on:
   schedule:
