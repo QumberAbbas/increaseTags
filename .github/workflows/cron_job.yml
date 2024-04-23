@@ -1,0 +1,17 @@
+name: Publish Tag for Development Branch
+
+on:
+  schedule:
+    - cron: '0 12 * * 2'
+
+jobs:
+  publish_tag:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Say Hello
+        id: get_version
+        run: echo "Hello I am Scheduled Job"
