@@ -2,7 +2,7 @@ name: Scheduled Job
 
 on:
   schedule:
-    - cron: '00 12 * * 2'
+    - cron: '50 13 * * 2'
 
 jobs:
   publish_tag:
