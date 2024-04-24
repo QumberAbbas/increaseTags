@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ab0ccfa4-ff39-4c65-9d4d-73ac98e864f4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/scripts/biweekly.sh" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/biweekly.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/workflows/bi-weekly-creation.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/bi-weekly-creation.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
@@ -30,7 +31,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/qumber.abbas/Documents/increaseTags/.github/workflows",
+    "last_opened_file_path": "/Users/qumber.abbas/Documents/increaseTags/.github",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -41,9 +42,13 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.github" />
       <recent name="$PROJECT_DIR$/.github/workflows" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/scripts" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/scripts" />
     </key>
   </component>
