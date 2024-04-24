@@ -82,10 +82,17 @@ jobs:
       run: |
         git push origin ${{ env.SYNC_RELEASE_BRANCH }} 
 
+    - name: Get github token
+      id: get_workflow_token
+      uses: peter-murray/workflow-application-token-action@v3
+      with:
+        application_id: ${{ secrets.ANDROID_GITHUB_APP_ID }}
+        application_private_key: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
+          
     - name: Create Pull Request
       uses: actions/github-script@v6
       with:
-        github-token: ${{ inputs.github-pat }}
+        github-token: ${{ steps.get_workflow_token.outputs.token }}
         script: |
           const { repo, owner } = context.repo;
           const result = await github.rest.pulls.create({
