@@ -39,6 +39,6 @@ jobs:
 
       - name: Trigger Next Workflow
         if: steps.calculate.outputs.run_next_workflow == 'true'  # Condition to trigger the next workflow
-        uses: ./.github/workflows/release-branch-creation.yml
+        uses: ./.github/workflows/release-branch-creation.yml@develop
         with:
           release-branch-name: ${{ inputs.release-branch-name }}
