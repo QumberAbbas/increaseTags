@@ -1,6 +1,6 @@
 # This is a basic workflow that is manually triggered
 
-name: Release Branch Creation
+name: Bi-weekly Branch Creation
 
 on:
   workflow_dispatch:
