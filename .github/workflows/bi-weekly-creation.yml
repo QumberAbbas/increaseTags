@@ -1,13 +1,15 @@
-# This is a basic workflow that is manually triggered
-
 name: Bi-weekly Branch Creation
 
 on:
   workflow_dispatch:
 
     inputs:
+      release-branch-name:
+        description: 'Release Branch Name'
+        required: true
+        type: string
       start-date:
-        description: 'Creation of release branch'
+        description: 'Start Date of Workflow'
         required: true
         type: string
 
@@ -29,6 +31,14 @@ jobs:
           echo "weekindex=$weekindex"
           if [ $weekindex -eq 0 ]; then
             echo "🟢 It's the first week of the bi-weekly cycle. The action is going to run."
+            echo "run_next_workflow=true" >> $GITHUB_OUTPUT
           else
             echo "🔴 It's the second week of the bi-weekly cycle. The action is going to be skipped."
+            echo "run_next_workflow=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Trigger Next Workflow
+        if: steps.calculate.outputs.run_next_workflow == 'true'  # Condition to trigger the next workflow
+        uses: .github/workflows/release-branch-creation.yml
+        with:
+          release-branch-name: ${{ inputs.release-branch-name }}
