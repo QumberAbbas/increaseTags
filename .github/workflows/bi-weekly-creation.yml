@@ -20,10 +20,5 @@ jobs:
         shell: bash
         working-directory: "${{ github.workspace }}/scripts"
         run: |
-          weekindex=$(chmod +x biweekly.sh "${{ inputs.start-date }}")
-          echo "weekindex=$weekindex"
-          if [ $weekindex -eq 0 ]; then
-            echo "🟢 It's the first week of the bi-weekly cycle. The action is going to run."
-          else
-            echo "🔴 It's the second week of the bi-weekly cycle. The action is going to be skipped."
-          fi
+          echo "Files in current directory:"
+          ls -l
