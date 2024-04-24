@@ -25,7 +25,7 @@ jobs:
         id: calculate
         shell: bash
         run: |
-          weekindex=$(./biweekly.sh "${{ inputs.start-date }}")
+          weekindex=$(./scripts/biweekly.sh "${{ inputs.start-date }}")
           echo "weekindex=$weekindex"
           if [ $weekindex -eq 0 ]; then
             echo "🟢 It's the first week of the bi-weekly cycle. The action is going to run."
