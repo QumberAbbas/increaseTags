@@ -1,0 +1,98 @@
+# This is a basic workflow that is manually triggered
+
+name: Release Branch Creation
+
+concurrency:
+  group: production
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+
+    inputs:
+      release-branch-name:
+        description: 'Creation of release branch'
+        required: true
+        type: string
+
+jobs:
+  say_hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Say Hello
+        id: get_version
+        run: echo "Hello I am Release Job"
+        
+  create-release-branch:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+ 
+    - name: Setup Git configuration
+      shell: bash
+      run: |
+        git config user.name "Qumber Abbas"
+        git config user.email "github-actions@users.noreply.github.com"
+
+    - name: Create new release branch
+      shell: bash
+      run: |
+        git checkout develop
+        git checkout -b ${{ inputs.release-branch-name }} develop
+
+    - name: Push release branch to remote
+      shell: bash
+      run: |
+        git push origin ${{ inputs.release-branch-name }} 
+
+    - name: Create file and add text
+      run: |
+          echo "Hello, world! How are you?" > example.txt
+          echo "This is a test file." >> example.txt
+    
+    - name: Sync branch name
+      shell: bash
+      run: |
+        echo "SYNC_RELEASE_BRANCH=sync/${{ inputs.release-branch-name }}-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
+    - name: Create new sync branch
+      shell: bash
+      run: |
+        git checkout -b ${{ env.SYNC_RELEASE_BRANCH }} ${{ inputs.release-branch-name }}   
+          
+    - name: Check for changes
+      id: check_changes
+      shell: bash
+      run: |
+        if [[ $(git status --porcelain) ]]; then
+          echo "Changes detected."
+          git add .
+          git commit -m "Committing changes before creating PR"
+        else
+          echo "No changes detected."
+        fi
+
+    - name: Push sync branch to remote
+      shell: bash
+      run: |
+        git push origin ${{ env.SYNC_RELEASE_BRANCH }} 
+
+    - name: Create Pull Request
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ inputs.github-pat }}
+        script: |
+          const { repo, owner } = context.repo;
+          const result = await github.rest.pulls.create({
+            title: '[Automation] Sync release branch ${{ inputs.release-branch-name }} changes to develop',
+            owner,
+            repo,
+            head: '${{ env.SYNC_RELEASE_BRANCH }}',
+            base: 'dev',
+            body: [
+              'This is an auto-generated PR for syncing the changes from release branch to develop. It also includes increase of app version for next release.',
+              'Sync release branch ${{ inputs.release-branch-name }} to develop'
+            ].join('\n')
+          });
