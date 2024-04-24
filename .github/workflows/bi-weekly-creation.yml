@@ -19,5 +19,5 @@ jobs:
         id: calculate
         shell: bash
         run: |
-          echo "Files in current directory:"
+          echo "${{ github.workspace }}"
           ls -l
