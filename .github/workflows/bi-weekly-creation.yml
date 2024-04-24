@@ -18,7 +18,6 @@ jobs:
       - name: Calculate weekdiff
         id: calculate
         shell: bash
-        working-directory: "${{ github.workspace }}/scripts"
         run: |
           echo "Files in current directory:"
           ls -l
