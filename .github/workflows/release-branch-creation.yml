@@ -100,7 +100,7 @@ jobs:
             owner,
             repo,
             head: '${{ env.SYNC_RELEASE_BRANCH }}',
-            base: 'dev',
+            base: 'develop',
             body: [
               'This is an auto-generated PR for syncing the changes from release branch to develop. It also includes increase of app version for next release.',
               'Sync release branch ${{ inputs.release-branch-name }} to develop'
