@@ -27,7 +27,9 @@ jobs:
         
   create-release-branch:
     runs-on: ubuntu-latest
-    environment: production
+    environment:
+      name: production
+      url: https://github.com
     steps:
 
     - name: Checkout
