@@ -40,7 +40,7 @@ jobs:
   create-release-branch:
     if: ${{ needs.is_bi_weekly.outputs.run_next_workflow == 'true' }}
     needs: is_bi_weekly
-    uses: QumberAbbas/increaseTags/.github/actions/release-branch-creation.yml@main
+    uses: QumberAbbas/increaseTags/.github/workflows/release-branch-creation.yml@main
     with:
       release-branch-name: ${{ inputs.release-branch-name }}
 
