@@ -32,7 +32,7 @@ jobs:
     needs: say_hello
     environment:
       name: production
-      url: "https://github.com/QumberAbbas/increaseTags/compare/1.0.1...${{ needs.say_hello.outputs.some-output }}"
+      url: "https://github.com/QumberAbbas/increaseTags/compare/${{ inputs.release-branch-name }}...${{ needs.say_hello.outputs.some-output }}"
     steps:
 
       - name: Checkout
