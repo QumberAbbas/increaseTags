@@ -18,4 +18,4 @@ jobs:
 
       - name: Say Hello
         id: get_version
-        run: echo "Hello I am Scheduled Job"
+        run: echo "Hello! I am Scheduled Job."
