@@ -43,6 +43,7 @@ jobs:
       shell: bash
       run: |
         git checkout develop
+        git fetch origin develop
         git checkout -b ${{ inputs.release-branch-name }} develop
 
     - name: Push release branch to remote
