@@ -14,9 +14,9 @@ on:
         required: true
         type: string
     secrets:
-      - ANDROID_GITHUB_APP_ID:
+       ANDROID_GITHUB_APP_ID:
           required: true
-      - ANDROID_GITHUB_APP_PRIVATE_KEY:
+       ANDROID_GITHUB_APP_PRIVATE_KEY:
           required: true
 
   workflow_dispatch:
