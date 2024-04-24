@@ -46,6 +46,8 @@ jobs:
     uses: QumberAbbas/increaseTags/.github/workflows/release-branch-creation.yml@develop
     with:
       release-branch-name: ${{ inputs.release-branch-name }}
-      secrets: inherit
+    secrets:
+      ANDROID_GITHUB_APP_ID: ${{ secrets.ANDROID_GITHUB_APP_ID }}
+      ANDROID_GITHUB_APP_PRIVATE_KEY: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
 
 
