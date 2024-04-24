@@ -1,0 +1,27 @@
+# This is a basic workflow that is manually triggered
+
+name: Release Branch Creation
+
+on:
+  workflow_dispatch:
+
+    inputs:
+      start-date:
+        description: 'Creation of release branch'
+        required: true
+        type: string
+
+jobs:
+  is_bi_weekly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate weekdiff
+        id: calculate
+        run: |
+          weekindex=$(bash scripts/biweekly.sh "${{ inputs.start-date }}")
+          echo "weekindex=$weekindex"
+          if [ $weekindex -eq 0 ]; then
+            echo "🟢 It's the first week of the bi-weekly cycle. The action is going to run."
+          else
+            echo "🔴 It's the second week of the bi-weekly cycle. The action is going to be skipped."
+          fi
