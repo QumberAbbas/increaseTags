@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: say_hello
     environment:
-      name: production
+      name: Release Train - Create Release Branch
       url: "https://github.com/QumberAbbas/increaseTags/compare/${{ needs.say_hello.outputs.some-output }}...${{ inputs.release-branch-name }}"
     steps:
 
