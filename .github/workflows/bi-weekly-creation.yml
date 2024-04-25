@@ -8,6 +8,10 @@ on:
         description: 'Release Branch Name'
         required: true
         type: string
+      previous-release-branch-name:
+        description: 'Previous Release Branch Name'
+        required: true
+        type: string
       start-date:
         description: 'Start Date of Workflow'
         required: true
@@ -38,7 +42,7 @@ jobs:
             echo "🔴 It's the second week of the bi-weekly cycle. The action is going to be skipped."
             echo "run_next_workflow=false" >> $GITHUB_OUTPUT
           fi
-      
+  
 
   create-release-branch:
     needs: is_bi_weekly
@@ -46,6 +50,7 @@ jobs:
     uses: QumberAbbas/increaseTags/.github/workflows/release-branch-creation.yml@develop
     with:
       release-branch-name: ${{ inputs.release-branch-name }}
+      previous-release-branch-name: ${{ inputs.previous-release-branch-name }}
     secrets:
       ANDROID_GITHUB_APP_ID: ${{ secrets.ANDROID_GITHUB_APP_ID }}
       ANDROID_GITHUB_APP_PRIVATE_KEY: ${{ secrets.ANDROID_GITHUB_APP_PRIVATE_KEY }}
