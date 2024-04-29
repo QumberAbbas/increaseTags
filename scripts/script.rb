@@ -10,7 +10,7 @@ class MyGit
     current_branch = g.current_branch
     puts "Current branch: #{current_branch}"
     tasks_list = []
-    g.log(500).between(start, "HEAD").each do |commit|
+    g.log(500).between(start, "1.0.22").each do |commit|
       tasks_list.push(commit)
     end
     print(tasks_list.count)
