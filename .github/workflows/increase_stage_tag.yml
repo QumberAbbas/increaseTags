@@ -1,9 +1,7 @@
-name: Publish tag for development branch
+name: Ruby Script
 
 on:
   push:
-    tags:
-      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   publish_tag:
@@ -24,15 +22,17 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0.2
+          ruby-version: 3.1
           bundler-cache: true
 
-      - name: Install dependencies
-        run: gem install git
+      - name: Install ruby script dependencies
+        run: |
+          chmod +x scripts/ruby_setup.sh
+          ./scripts/install_gems.sh
 
       - name: Run Ruby script
         env:
-          PARAM1: ${{ env.VERSION_NUMBER_CI }}
+          previous_release_branch: '1.0.10'
         run: ruby scripts/script.rb
 
 

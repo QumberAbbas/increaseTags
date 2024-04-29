@@ -1,28 +1,32 @@
 require 'git'
+require 'active_support'
+require 'active_support/core_ext'
+require 'set'
 
 class MyGit
-  @param1 = ENV['PARAM1'] # Define as class variable
-
-  def self.param1
-    @param1
-  end
-  def self.git_last_merged_issues(git_path, pattern)
-    print("param1: #{param1}\n")
+  def self.git_last_merged_issues(git_path, start)
     g = Git.open(git_path)
-    latest_release_tag = "3.7.0"
-    tasks_list = g.log(200).between(latest_release_tag, "HEAD").count
-    print(tasks_list)
+    g.fetch
+    current_branch = g.current_branch
+    puts "Current branch: #{current_branch}"
+    tasks_list = []
+    g.log(500).between(start, "HEAD").each do |commit|
+      tasks_list.push(commit)
+    end
+    print(tasks_list.count)
+    tasks_list.each do |ticket_number|
+      puts ticket_number
+    end
+    tasks_list
   end
 
 end
 
 class MyPipeline
-  @release_tag_pattern = "[0-9]*.[0-9]*.[0-9]*"
-
+  @previous_branch = ENV['previous_release_branch']
   def self.release_run(git_path)
-    MyGit.git_last_merged_issues(git_path, @release_tag_pattern)
+    MyGit.git_last_merged_issues(git_path, @previous_branch)
   end
 end
-
 
 MyPipeline.release_run(Dir.pwd)
