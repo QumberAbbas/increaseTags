@@ -7,6 +7,13 @@ class MyGit
   def self.git_last_merged_issues(git_path, start)
     g = Git.open(git_path)
     g.fetch
+    branches = g.branches
+
+    # Iterate over the branches and print their names
+    branches.each do |branch|
+      puts branch.full
+    end
+
     current_branch = g.current_branch
     puts "Current branch: #{current_branch}"
     tasks_list = []
