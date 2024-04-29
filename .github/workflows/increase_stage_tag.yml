@@ -27,7 +27,7 @@ jobs:
 
       - name: Install ruby script dependencies
         run: |
-          chmod +x scripts/ruby_setup.sh
+          chmod +x scripts/install_gems.sh
           ./scripts/install_gems.sh
 
       - name: Run Ruby script
