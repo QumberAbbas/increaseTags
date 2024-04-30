@@ -33,11 +33,6 @@ jobs:
       - name: Running tests
         run: echo "Running tests..."
 
-      - name: Run Ruby script
-        env:
-          previous_release_branch: '1.0.10'
-        run: ruby scripts/script.rb
-
       - name: Get Release Version To Be Created
         # This step will get the release version to be created from the version.properties file
         # This will also calculate the previous version
