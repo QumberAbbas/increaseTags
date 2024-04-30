@@ -1,9 +1,7 @@
-name: Publish tag for development branch
+name: Ruby Script
 
 on:
   push:
-    tags:
-      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   publish_tag:
@@ -24,15 +22,35 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0.2
+          ruby-version: 3.1
           bundler-cache: true
 
-      - name: Install dependencies
-        run: gem install git
+      - name: Install ruby script dependencies
+        run: |
+          chmod +x scripts/install_gems.sh
+          ./scripts/install_gems.sh
 
-      - name: Run Ruby script
-        env:
-          PARAM1: ${{ env.VERSION_NUMBER_CI }}
-        run: ruby scripts/script.rb
+      - name: Running tests
+        run: echo "Running tests..."
+
+      - name: Get Release Version To Be Created
+        # This step will get the release version to be created from the version.properties file
+        # This will also calculate the previous version
+        id: get_release_versions
+        run: |
+          release_train_version=$(grep '^version=' version.properties | cut -d'=' -f2)
+          echo "release_train_version=$release_train_version" >> $GITHUB_OUTPUT
+          IFS='.' read -r -a version_parts <<< "$release_train_version"
+          previous_release_train_version="${version_parts[0]}.${version_parts[1]}.$((${version_parts[2]} - 1))"
+          echo "previous_release_train_version=$previous_release_train_version" >> $GITHUB_OUTPUT
+
+      - name: Print Release Version To Be Created
+        run: |
+          echo "Release version to be created: ${{ steps.get_release_versions.outputs.release_train_version }}"
+          echo "Previous Release version: ${{ steps.get_release_versions.outputs.previous_release_train_version }}"
+
+      - name: Get the ticket number
+        if : failure()
+        run: echo "Failed"
 
 
