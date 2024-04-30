@@ -43,6 +43,22 @@ jobs:
           previous_release_branch: '1.0.10'
         run: ruby scripts/script.rb
 
+      - name: Get Release Version To Be Created
+        # This step will get the release version to be created from the version.properties file
+        # This will also calculate the previous version
+        id: get_release_versions
+        run: |
+          release_train_version=$(grep '^version=' version.properties | cut -d'=' -f2)
+          echo "release_train_version=$release_train_version" >> $GITHUB_OUTPUT
+          IFS='.' read -r -a version_parts <<< "release_train_version"
+          previous_release_train_version="${version_parts[0]}.${version_parts[1]}.$((${version_parts[2]} - 1))"
+          echo "previous_release_train_version=$previous_release_train_version" >> $GITHUB_OUTPUT
+
+      - name: Print Release Version To Be Created
+        run: |
+          echo "Release version to be created: ${{ steps.get_release_versions.outputs.release_train_version }}"
+          echo "Previous Release version: ${{ steps.get_release_versions.outputs.previous_release_train_version }}"
+
       - name: Get the ticket number
         if : failure()
         run: echo "Failed"
