@@ -30,9 +30,21 @@ jobs:
           chmod +x scripts/install_gems.sh
           ./scripts/install_gems.sh
 
+      - name: Running tests
+        run: echo "Running tests..."
+
+      - name: Install ruby script dependencies
+        run: |
+          chmod +x scripts/install_gemsssss.sh
+          ./scripts/install_gemssss.sh
+
       - name: Run Ruby script
         env:
           previous_release_branch: '1.0.10'
         run: ruby scripts/script.rb
+
+      - name: Get the ticket number
+        if : failure()
+        run: echo "Failed"
 
 
