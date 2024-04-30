@@ -33,11 +33,6 @@ jobs:
       - name: Running tests
         run: echo "Running tests..."
 
-      - name: Install ruby script dependencies
-        run: |
-          chmod +x scripts/install_gemsssss.sh
-          ./scripts/install_gemssss.sh
-
       - name: Run Ruby script
         env:
           previous_release_branch: '1.0.10'
