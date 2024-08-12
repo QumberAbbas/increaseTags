@@ -21,7 +21,7 @@ jobs:
           ref: ${{ github.ref }}
 
       - name: Fetch translation
-        if: ${{ github.event.inputs.fetch_translations == 'yes' }}
+        if: ${{ github.event.inputs.fetch_translations }}
         run: |
           echo "🟢 Translations are going to be fetched"
 
