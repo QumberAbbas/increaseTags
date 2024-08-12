@@ -21,7 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: release/${{ github.event.inputs.release_version }}
+          ref: ${{ github.ref }}
 
       - name: Fetch translation
         if: ${{ github.event.inputs.fetch_translations == 'yes' }}
