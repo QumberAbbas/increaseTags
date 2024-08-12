@@ -5,10 +5,8 @@ on:
     inputs:
       fetch_translations:
         required: true
+        type: boolean
         description: Should fetch latest translations
-        options:
-          - yes
-          - no
 
 jobs:
   publish_app_to_prod:
