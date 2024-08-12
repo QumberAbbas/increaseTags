@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Slack Message
         run: |
-          echo "🟢 Slack Message"
+          echo "🟢 Slack Message..."
 
   publish_app_to_prod:
     runs-on: ubuntu-latest
