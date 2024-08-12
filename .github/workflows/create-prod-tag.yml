@@ -5,7 +5,6 @@ on:
     inputs:
       fetch_translations:
         required: true
-        type: choice
         description: Should fetch latest translations
         options:
           - yes
