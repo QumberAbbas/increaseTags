@@ -23,7 +23,7 @@ jobs:
 
       - name: Slack Message
         run: |
-          echo "🟢 Slack Message $ {{ ENV.RELEASE_VERSION }}"
+          echo "🟢 Slack Message ${{ ENV.RELEASE_VERSION }}"
 
   publish_app_to_prod:
     runs-on: ubuntu-latest
