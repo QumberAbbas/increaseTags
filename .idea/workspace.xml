@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ab0ccfa4-ff39-4c65-9d4d-73ac98e864f4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/publish_tag.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/publish_tag.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/publish_tag.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -70,7 +70,7 @@
       <workItem from="1713292739392" duration="3567000" />
       <workItem from="1713354480686" duration="578000" />
       <workItem from="1713944945951" duration="9811000" />
-      <workItem from="1723452939161" duration="758000" />
+      <workItem from="1723452939161" duration="1158000" />
     </task>
     <servers />
   </component>
