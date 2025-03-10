@@ -1,5 +1,4 @@
 name: Create tag for prod branch
-
 on:
   workflow_dispatch:
     inputs:
